@@ -10,6 +10,7 @@ const MySelect = ({ label, placeholder, required, handleChange, children, halfSi
             <span className="options">
                 {children}
             </span>
+            <span className="adorn"><i className="fas fa-sort-down"></i></span>
             <span className="warning-message">{errorMessage}</span>
         </S.Wrapper>
     )

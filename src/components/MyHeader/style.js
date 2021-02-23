@@ -3,7 +3,7 @@ import { containerBase } from '../../pages/shared/style';
 
 export const Wrapper = styled.header`
     min-height: 65px;
-    background: #FDFCFC;
+    background: #F8F9FC;
     display: flex;
     align-items: center;
     .logo {

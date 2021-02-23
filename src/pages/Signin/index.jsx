@@ -9,6 +9,7 @@ import * as S from './style';
 
 const Signin = ({ address }) => {
   const [addressForm, setAddressForm] = useState(!!address);
+  const [managerAddressList, setManagerAddressList] = useState(true);
 
   const formContent = useMemo(() => {
     return addressForm ? (
@@ -84,7 +85,7 @@ const Signin = ({ address }) => {
               </S.CustomForm>
           </S.Container>
       </main>
-      <MyModal show>
+      <MyModal show={managerAddressList}>
         <S.ModalContent>
           <h3>Gerenciar endereços</h3>
           <div className="row-input">

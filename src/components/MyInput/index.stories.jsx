@@ -1,4 +1,4 @@
-import MyTextarea from ".";
+import MyInput from ".";
 
 const containerStyle = {
     maxWidth: '448px',
@@ -6,18 +6,18 @@ const containerStyle = {
 }
 
 export default {
-    title: 'compoents/MyTextarea',
-    component: MyTextarea
+    title: 'compoents/MyInput',
+    component: MyInput
 }
 
 export const defaultRender = () => (
     <div style={containerStyle}>
-        <MyTextarea label="nome" required />
+        <MyInput label="nome" required />
     </div>
 );
 
 export const halfSize = () => (
     <div style={containerStyle}>
-        <MyTextarea label="nome" required halfSize />
+        <MyInput label="nome" required halfSize />
     </div>
 );

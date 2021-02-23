@@ -6,8 +6,7 @@ export const Wrapper = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    ${props => props.show ? '' : 'display: none;'}
-    display: flex;
+    ${props => props.show ? 'display: flex;' : 'display: none;'}
     justify-content: center;
     align-items: center;
     > div {
