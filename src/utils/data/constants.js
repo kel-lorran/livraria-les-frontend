@@ -1,0 +1,1 @@
+export const PROFILE_CUSTOMER_DATA = 'profileCustomerData';

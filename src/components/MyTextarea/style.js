@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
         font-size: 14px;
         line-height: 16px;
         background: white;
-        color: #A1A1A1;
+        color: #757575;
     }
     .is-required {
         &::after {
@@ -24,7 +24,7 @@ export const Wrapper = styled.div`
     }
     textarea {
         border-radius: 4px;
-        border: 1px solid #A1A1A1;
+        border: 1px solid #757575;
         min-height: 32px;
         font-weight: bold;
         font-size: 18px;

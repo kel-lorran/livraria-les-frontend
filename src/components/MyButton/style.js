@@ -14,4 +14,5 @@ export const CustomButton = styled.button`
     border-radius: 4px;
     border: none;
     text-transform: uppercase;
+    display: inline-block;
 `;

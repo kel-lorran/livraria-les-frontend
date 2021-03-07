@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
     justify-content: center;
     label {
         font-weight: bold;
-        color: #A1A1A1;
+        color: #757575;
         left: calc(${lateralPadding} + ${gutter} - ${labelPadding});
         position: absolute;
         font-size: 18px;
@@ -25,7 +25,7 @@ export const Wrapper = styled.div`
     input {
         padding: 0 ${lateralPadding};
         border-radius: 4px;
-        border: 1px solid #A1A1A1;
+        border: 1px solid #757575;
         height: 32px;
         font-weight: bold;
         font-size: 18px;
@@ -52,6 +52,7 @@ export const Wrapper = styled.div`
         font-family: Roboto Condensed;
         font-weight: bold;
         font-size: 16px;
+        line-height: 16px;
         color: #5B5B5B;
         margin-top: 0;
         padding: 0 calc(${lateralPadding} + ${gutter});

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import MyInput from ".";
 
 const containerStyle = {
@@ -6,7 +7,7 @@ const containerStyle = {
 }
 
 export default {
-    title: 'compoents/MyInput',
+    title: 'components/MyInput',
     component: MyInput
 }
 
@@ -21,3 +22,12 @@ export const halfSize = () => (
         <MyInput label="nome" required halfSize />
     </div>
 );
+
+export const ControledComponent = () => {
+    const [val, setVal] = useState("");
+    return (
+        <div style={containerStyle}>
+            <MyInput value={val} handleChange={e => setVal(e.target.value)} label="nome" required halfSize />
+        </div>
+    );
+}

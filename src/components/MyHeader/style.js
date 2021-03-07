@@ -6,6 +6,8 @@ export const Wrapper = styled.header`
     background: #F8F9FC;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 8vmin;
     .logo {
         width: 152px;
         height: 42px;
@@ -14,14 +16,35 @@ export const Wrapper = styled.header`
         left: 50%;
         transform: translateX(-50%);
     }
+    nav {
+        background: #3D3D3D;
+        width: 100%;
+        a {
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration-line: underline;
+            color: #FFFFFF;
+            margin: 5px 1.3vw;
+        }
+        .active ~ .active {
+            color: #A1A1A1;
+        }
+        > div {
+            display: flex;
+            justify-content: center;
+        }
+    }
 `;
 
 export const Container = styled.div`
     ${containerBase}
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    > button + button {
-        margin-left: 19px;
+    .header-items-group {
+        display: flex;
+        justify-content: flex-end;
+        padding: 8px 0;
+        position: relative;
+        > button + button {
+            margin-left: 19px;
+        }
     }
 `

@@ -6,7 +6,7 @@ const containerStyle = {
 }
 
 export default {
-    title: 'compoents/MyTextarea',
+    title: 'components/MyTextarea',
     component: MyTextarea
 }
 

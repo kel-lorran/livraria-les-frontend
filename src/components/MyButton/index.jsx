@@ -1,8 +1,8 @@
 import * as S from './style';
 
-export default ({ children, handleClick, type = 'button'}) => {
+export default ({ children, onClick, type = 'button'}) => {
     return (
-        <S.CustomButton type={type} onClick={handleClick}>
+        <S.CustomButton type={type} onClick={onClick}>
             {children}
         </S.CustomButton>
     )

@@ -6,7 +6,7 @@ const containerStyle = {
 }
 
 export default {
-    title: 'compoents/MySelect',
+    title: 'components/MySelect',
     component: MySelect
 }
 

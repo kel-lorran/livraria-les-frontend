@@ -7,7 +7,7 @@ const containerStyle = {
 }
 
 export default {
-    title: 'compoents/MyModal',
+    title: 'components/MyModal',
     component: MyModal
 }
 

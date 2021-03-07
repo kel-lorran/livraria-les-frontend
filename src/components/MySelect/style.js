@@ -14,9 +14,10 @@ export const Wrapper = styled.div`
     label {
         font-weight: bold;
         font-size: 18px;
-        color: #A1A1A1;
+        color: #757575;
         left: calc(${lateralPadding} + ${gutter} - ${labelPadding});
         position: absolute;
+        bottom: 90%;
     }
     .adorn {
         font-size: 12px;
@@ -24,7 +25,7 @@ export const Wrapper = styled.div`
         height: 14px;
         position: absolute;
         right: calc(${lateralPadding} + ${gutter} - ${labelPadding});
-        color: #A1A1A1;
+        color: #757575;
     }
     .is-required {
         &::after {
@@ -43,10 +44,12 @@ export const Wrapper = styled.div`
         position: absolute;
         top: 100%;
         background: #fbfbfb;
-        width: calc(100% - 2 * (${lateralPadding} + ${gutter}));
+        width: calc(100% - 2 * ${gutter});
         z-index: 1;
         cursor: pointer;
         border-radius: 0 0 4px 4px;
+        max-height: 170px;
+        overflow-y: auto;
         &:hover {
             display: flex;
         }
@@ -60,22 +63,13 @@ export const Wrapper = styled.div`
     input {
         padding: 0 ${lateralPadding};
         border-radius: 4px;
-        border: 1px solid #A1A1A1;
+        border: 1px solid #757575;
         height: 32px;
         font-weight: bold;
         font-size: 18px;
         color: #5B5B5B;
         &:focus ~ .options {
             display: flex;
-        }
-        &:focus, &:valid, &.fill {
-            & + label {
-                padding: 0 ${labelPadding};
-                background: white;
-                font-size: 12px;
-                top: -0.25em;
-                transition: all 0.2s;
-            }
         }
     }
     @media screen and (min-width: 992px) {
