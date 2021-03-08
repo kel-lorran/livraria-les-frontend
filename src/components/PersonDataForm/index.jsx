@@ -46,7 +46,6 @@ const PersonDataForm = ({ personDataObj, updatePersonDataObj }) => {
             email
         }
         try {
-            debugger
             const updatedCustomer = await axios.put(`https://localhost:5001/v1/customer/${id}`, dataToSend, {
                 headers: {
                     'Content-Type': 'application/json'

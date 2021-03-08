@@ -90,8 +90,7 @@ export const inputMap = [
             componentName: 'MyInput',
             name: 'weight',
             label:  'peso(kg)',
-            type: 'number',
-            min: 1,
+            type: 'text',
             halfSize: true,
             required: true
         },
@@ -124,3 +123,55 @@ export const inputMap = [
         },
     ]
 ]
+
+const abbreviateText = (len = 60) => (row, ...keys) => row[keys[0]].toString().replace(new RegExp(`(?<=.{${len}}).+`), '...');
+
+const gpdFormatter = row => `GPD ${row.pricingGroup}`;
+
+const dimensionFormatter = row => `${row.length}x${row.width}x${row.height}`;
+
+export const tableOptions = {
+    activeBooks: {
+        //header: ['Autor', 'Titulo', 'Ano', 'GPD', 'Dimensões', 'Cd. Barras'],
+        showElements: [
+            {
+                title: 'Autor',
+                key: 'author',
+                columnWidth: 12
+            },
+            {
+                title: 'Titulo',
+                key: 'title',
+                columnWidth: 14
+            },
+            {
+                title: 'Ano',
+                key: 'year',
+            },
+            {
+                title: 'GDP',
+                key: 'pricingGroup',
+                formatter: gpdFormatter
+            },
+            {
+                title: 'Dimensões',
+                key: 'length',
+                columnWidth: 12,
+                formatter: dimensionFormatter
+            },
+            {
+                title: 'Cd. barras',
+                key: 'codeBar'
+            }
+        ],
+        sideLabel: 'Ativos',
+        onRightEdge: <i className="fas fa-info-circle"></i>,
+        onLeftEdge: <i class="far fa-square"></i> 
+    },
+    // activeBooks: {
+    //     header: ['Autor', 'Titulo', 'Ano', 'GPD', 'Dimensões', 'Cd. Barras'],
+    //     sideLabel: 'Inativos',
+    //     onRightEdge: <i className="fas fa-info-circle"></i>,
+    //     onLeftEdge: <i className="far fa-square"></i> 
+    // }
+}

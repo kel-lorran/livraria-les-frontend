@@ -11,8 +11,22 @@ export const Wrapper = styled.form`
     .my-input-group {
         margin: 0 -9px;
         flex-grow: 1;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+          background: #F8F9FC;
+        }
+        
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+          background: #C4C4C4;
+        }
     }
     button {
-        margin: 40px auto;
+        margin: 0 auto;
     }
 `;

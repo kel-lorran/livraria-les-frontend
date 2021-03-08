@@ -27,11 +27,10 @@ export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit }) => {
     }
 
     const getComponent = ({ componentName, options, name,...props }) => {
-        debugger
         switch (componentName) {
             case 'MyInput':
                 return <MyInput {...props} key={name} name={name} value={formData[name]} handleChange={e => setFormData({ ...formData, [name]: e.target.value})} />;
-            case 'MyTextArea':
+            case 'MyTextarea':
                 return <MyTextArea {...props} key={name} name={name} value={formData[name]} handleChange={e => setFormData({ ...formData, [name]: e.target.value})} />;
             case 'MySelect':
                 return (
