@@ -9,44 +9,38 @@ import * as S from './style';
 import { FormHelper } from './formHelper';
 import { TableHelper } from './tableHelper';
 
-import { getAllCustomersActives, getAllCustomersInactives } from '../../../actions/customerActions';
+import { getAllAddressByIdOrIds, getAllAddress } from '../../../actions/addressActions';
 
-const Customers = () => {
+const Address = () => {
     const [showModal, setShowModal] = useState(false);
-    const [updateCustomerList, setUpdateCustomerList] = useState(false);
-    const [activeCustomerList, setActiveCustomerList] = useState(null);
-    const [inactiveCustomerList, setInactiveCustomerList] = useState(null);
+    const [updateAdressList, setUpdateAdressList] = useState(false);
+    const [addressList, setAdressList] = useState(null);
     const [itemSelected, setItemSelected] = useState();
     const [resultIsFiltered, setResultIsFiltered] = useState(false);
 
     const handleCloseModal = (shouldUpdate) => {
         setShowModal(false);
-        if(shouldUpdate) setUpdateCustomerList(!updateCustomerList);
+        if(shouldUpdate) setUpdateAdressList(!updateAdressList);
     }
 
     useEffect(async () => {
+        const customerIds = window.location.search.match(/(?<=customerid\=)[\d|,]+/gi)?.[0];
         try {
-            const _activeCustomerList = await getAllCustomersActives().then(r => r.data);
-            setActiveCustomerList(_activeCustomerList);
+            let _addressList;
+            if (customerIds)
+                _addressList = await getAllAddressByIdOrIds(customerIds.split(',')).then(r => r.map(a => a.data));
+            else
+                _addressList = await getAllAddress().then(r => r.data);
+            setAdressList(_addressList);
         } catch (error) {
             window.alert("Falha na obtenção da lista de clientes ativos");
             console.log(error);
         }
-    }, [updateCustomerList])
-
-    useEffect(async () => {
-        try {
-            const _inactiveCustomerList = await getAllCustomersInactives().then(r => r.data);
-            setInactiveCustomerList(_inactiveCustomerList);
-        } catch (error) {
-            window.alert("Falha na obtenção da lista de clientes inativos");
-            console.log(error);
-        }
-    }, [updateCustomerList])
+    }, [updateAdressList])
 
     useEffect(() => {
         if(itemSelected) {
-            setShowModal('aboutCustomer')
+            setShowModal('aboutAddress')
         }
     }, [itemSelected])
 
@@ -57,6 +51,7 @@ const Customers = () => {
                 <S.Container>
                     <div>
                         <div className="call-to-action">
+                            <span className="title">ENDEREÇOS |</span>
                             {resultIsFiltered ? (
                                 <SimpleTextAsButton onClick={() => {
                                     handleCloseModal(true);
@@ -66,27 +61,26 @@ const Customers = () => {
                                 </SimpleTextAsButton>
                             ) : (
                                 <>
-                                    <SimpleTextAsButton onClick={() => setShowModal('createCustomer')} >
-                                        + novo cliente
-                                    </SimpleTextAsButton>
-                                    <SimpleTextAsButton onClick={() => setShowModal('searchCustomer')} >
+                                    {/* <SimpleTextAsButton onClick={() => setShowModal('createAddress')} >
+                                        + novo endereço
+                                    </SimpleTextAsButton> */}
+                                    <SimpleTextAsButton onClick={() => setShowModal('searchAddress')} >
                                         <i className="fas fa-search"></i> Pesquisa
                                     </SimpleTextAsButton>
                                 </>
                             )}
                         </div>
                         <div className="table-group">
-                            {activeCustomerList && <TableHelper data={activeCustomerList} type="activeCustomers" selectItem={item => setItemSelected(item)} />}
-                            {inactiveCustomerList && <TableHelper data={inactiveCustomerList} type="inactiveCustomers" selectItem={item => setItemSelected(item)} />}
+                            {addressList && <TableHelper data={addressList} type="activeAddress" selectItem={item => setItemSelected(item)} />}
                         </div>
                     </div>
                 </S.Container>
             </main>
             <MyModal show={showModal} handleClose={handleCloseModal}>
-                <FormHelper setResultIsFiltered={setResultIsFiltered} setActiveCustomerList={setActiveCustomerList} setInactiveCustomerList={setInactiveCustomerList} type={showModal} handleClose={handleCloseModal} setShowModal={setShowModal} itemSelected={itemSelected} />
+                <FormHelper setResultIsFiltered={setResultIsFiltered} setAdressList={setAdressList} type={showModal} handleClose={handleCloseModal} setShowModal={setShowModal} itemSelected={itemSelected} />
             </MyModal>
         </S.PageWrapper>
     )
 }
 
-export default Customers;
+export default Address;

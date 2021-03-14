@@ -8,10 +8,18 @@ export const defaultHeader = {
     }
 }
 
-export const genericPost = async (data, endpoint) => {
-    return await axios.post(`${apiUrl}${endpoint}`, data, defaultHeader);
+export const genericPost = (data, endpoint) => {
+    return axios.post(`${apiUrl}${endpoint}`, data, defaultHeader);
 }
 
-export const genericGet = async endpoint => {
-    return await axios.get(`${apiUrl}${endpoint}`);
+export const genericGet = endpoint => {
+    return axios.get(`${apiUrl}${endpoint}`);
+}
+
+export const genericPut = (data, endpoint) => {
+    return axios.put(`${apiUrl}${endpoint}`, data, defaultHeader);
+}
+
+export const genericDelete = endpoint => {
+    return axios.delete(`${apiUrl}${endpoint}`, defaultHeader);
 }

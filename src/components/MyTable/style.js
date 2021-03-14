@@ -24,6 +24,7 @@ export const Wrapper = styled.div`
         }
     }
     .table-container {
+        min-height: 100px;
         ${props => props.maxHeight && `
             max-height: ${props.maxHeight};
             overflow-y: auto;

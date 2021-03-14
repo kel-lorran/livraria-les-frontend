@@ -1,7 +1,7 @@
 import * as S from './style';
 
 const MyInput = ({
-    value,
+    value = '',
     name,
     label,
     required,

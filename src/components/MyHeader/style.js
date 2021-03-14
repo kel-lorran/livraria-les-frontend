@@ -43,7 +43,13 @@ export const Container = styled.div`
         justify-content: flex-end;
         padding: 8px 0;
         position: relative;
+        a {
+            display: inline-block;
+        }
         > button + button {
+            margin-left: 19px;
+        }
+        > a + a {
             margin-left: 19px;
         }
     }

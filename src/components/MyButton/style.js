@@ -15,4 +15,11 @@ export const CustomButton = styled.button`
     border: none;
     text-transform: uppercase;
     display: inline-block;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.85;
+    }
+    &:active {
+        opacity: 0.65;
+    }
 `;

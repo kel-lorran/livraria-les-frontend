@@ -9,11 +9,10 @@ import * as S from './style';
 
 export const buildInitialState = names => names.reduce((ac, name) => ({ ...ac, [name]: '' }), {});
 
-export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit }) => {
+export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit, item, ...props }) => {
     const [step, setStep] = useState(0);
     const [mustContinue, setContinue] = useState(false);
-    const [formData, setFormData] = useState(buildInitialState(inputMap[step].map(e => e.name)));
-
+    const [formData, setFormData] = useState(item || buildInitialState(inputMap[step].map(e => e.name)));
     useEffect(() => setContinue(!!inputMap[step + 1]), [step])
     
     const handleSubmit = e => {
@@ -46,7 +45,7 @@ export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit }) => {
     }
 
     return (
-        <S.Wrapper onSubmit={handleSubmit}>
+        <S.Wrapper onSubmit={handleSubmit} {...props}>
             <div className="my-input-group">
                 {inputMap[step].map(e => getComponent(e))}
             </div>

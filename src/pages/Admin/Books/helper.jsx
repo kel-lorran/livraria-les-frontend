@@ -124,6 +124,43 @@ export const inputMap = [
     ]
 ]
 
+export const inputMapToInativation = [
+    [
+        {   
+            componentName: 'MyInput',
+            name: 'reasonInativation',
+            label:  'motivo da inativação',
+            required: true
+        },
+    ]
+]
+
+export const inputMapToAtivation = [
+    [
+        {   
+            componentName: 'MyInput',
+            name: 'reasonAtivation',
+            label:  'motivo da Ativação',
+            required: true
+        },
+    ]
+]
+
+export const inputMapToShowStatus = [
+    [
+        {
+            componentName: 'MySelect',
+            name: 'active',
+            placeholder:  'item ativo',
+            required: true,
+            options: [
+                { value: '1', text: 'sim'},
+                { value: '2', text: 'não'}
+            ]
+        },
+    ]
+]
+
 const abbreviateText = (len = 60) => (row, ...keys) => row[keys[0]].toString().replace(new RegExp(`(?<=.{${len}}).+`), '...');
 
 const gpdFormatter = row => `GPD ${row.pricingGroup}`;
@@ -131,47 +168,37 @@ const gpdFormatter = row => `GPD ${row.pricingGroup}`;
 const dimensionFormatter = row => `${row.length}x${row.width}x${row.height}`;
 
 export const tableOptions = {
-    activeBooks: {
-        //header: ['Autor', 'Titulo', 'Ano', 'GPD', 'Dimensões', 'Cd. Barras'],
-        showElements: [
-            {
-                title: 'Autor',
-                key: 'author',
-                columnWidth: 12
-            },
-            {
-                title: 'Titulo',
-                key: 'title',
-                columnWidth: 14
-            },
-            {
-                title: 'Ano',
-                key: 'year',
-            },
-            {
-                title: 'GDP',
-                key: 'pricingGroup',
-                formatter: gpdFormatter
-            },
-            {
-                title: 'Dimensões',
-                key: 'length',
-                columnWidth: 12,
-                formatter: dimensionFormatter
-            },
-            {
-                title: 'Cd. barras',
-                key: 'codeBar'
-            }
-        ],
-        sideLabel: 'Ativos',
-        onRightEdge: <i className="fas fa-info-circle"></i>,
-        onLeftEdge: <i class="far fa-square"></i> 
-    },
-    // activeBooks: {
-    //     header: ['Autor', 'Titulo', 'Ano', 'GPD', 'Dimensões', 'Cd. Barras'],
-    //     sideLabel: 'Inativos',
-    //     onRightEdge: <i className="fas fa-info-circle"></i>,
-    //     onLeftEdge: <i className="far fa-square"></i> 
-    // }
+    showElements: [
+        {
+            title: 'Autor',
+            key: 'author',
+            columnWidth: 12
+        },
+        {
+            title: 'Titulo',
+            key: 'title',
+            columnWidth: 14
+        },
+        {
+            title: 'Ano',
+            key: 'year',
+        },
+        {
+            title: 'GDP',
+            key: 'pricingGroup',
+            formatter: gpdFormatter
+        },
+        {
+            title: 'Dimensões',
+            key: 'length',
+            columnWidth: 12,
+            formatter: dimensionFormatter
+        },
+        {
+            title: 'Cd. barras',
+            key: 'codeBar'
+        }
+    ],
+    onRightEdge: <i className="fas fa-info-circle"></i>,
+    onLeftEdge: <i class="far fa-square"></i>
 }

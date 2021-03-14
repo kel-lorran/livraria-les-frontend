@@ -10,5 +10,14 @@ export const Container = styled.div`
 `;
 
 export const SectionOne = styled.section`
+    .book-display {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -16px;
+        > * {
+            padding: 0 16px;
+            width: 20%;
+            margin-bottom: 30px;
+        }
+    }
 `;
-
