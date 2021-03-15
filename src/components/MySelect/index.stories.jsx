@@ -12,12 +12,24 @@ export default {
 
 export const defaultRender = () => (
     <div style={containerStyle}>
-        <MySelect label="nome">
+        <MySelect placeholder="nome">
             <>
                 <span data-value="1">opção 1</span>
                 <span data-value="2">opção 2</span>
                 <span data-value="3">opção 3</span>
             </>
         </MySelect>
+    </div>
+);
+
+export const fetchOptions = () => (
+    <div style={containerStyle}>
+        <MySelect placeholder="nome" children={async () => {
+            await new Promise((resolve, reject) => setTimeout(resolve, 3000));
+            return <>
+                <span data-value="1">opção 1</span>
+                <span data-value="2">opção 2</span>
+            </>
+        }} />
     </div>
 );

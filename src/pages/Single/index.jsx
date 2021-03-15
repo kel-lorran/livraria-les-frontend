@@ -9,6 +9,7 @@ import Loader from '../../components/Loader';
 import * as S from './style';
 
 import { getBookById, } from '../../actions/bookActions';
+import { getMerchandiseById } from '../../actions/merchandiseActions';
 
 const Single = ({ match: { params }, history, setBasket, basket }) => {
     const [book, setBook] = useState();
@@ -16,8 +17,8 @@ const Single = ({ match: { params }, history, setBasket, basket }) => {
 
     useEffect(async () => {
         try {
-            const _book = await getBookById(productId).then(r => r.data);
-            setBook(_book);
+            const { book: [_book], ...rest} = await getMerchandiseById(productId).then(r => r.data);
+            setBook({ ..._book,...rest });
         } catch (error) {
             window.alert("Falha na obtenção das informações do livro");
             console.log(error);
@@ -42,7 +43,7 @@ const Single = ({ match: { params }, history, setBasket, basket }) => {
                         <img className="cover-img" src="https://via.placeholder.com/400x600.jpg?text=Capa+Livro" />
                         <div className="text-content">
                             <h1>{book.title}</h1>
-                            <p><span className="price">R${(69.99).toLocaleString()}</span><MyButton onClick={buyItem}>Comprar</MyButton></p>
+                            <p><span className="price">R${(book.price).toLocaleString()}</span><MyButton onClick={buyItem}>Comprar</MyButton></p>
                         </div>
                     </S.Container>
                 </S.SectionOne>

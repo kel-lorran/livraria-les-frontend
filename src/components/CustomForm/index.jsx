@@ -9,11 +9,28 @@ import * as S from './style';
 
 export const buildInitialState = names => names.reduce((ac, name) => ({ ...ac, [name]: '' }), {});
 
+// const buildOptions = (options, getOptions, key) => {
+//     if(typeof getOptions === 'function')
+//         getOptions().then(r => setAsyncOptions({ ...asyncOptions, [key]: r }));
+//     setAsyncOptions({ ...asyncOptions, [key]: options });
+//     debugger
+// }
+
+export const buildInitialOptions = _inputMap => _inputMap
+    .filter(({ componentName }) => componentName === 'MySelect')
+    .reduce((ac, { options, name }) => ({ ...ac, [name]: options }), {})
+
 export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit, item, ...props }) => {
     const [step, setStep] = useState(0);
     const [mustContinue, setContinue] = useState(false);
     const [formData, setFormData] = useState(item || buildInitialState(inputMap[step].map(e => e.name)));
+    const [asyncOptions, setAsyncOptions] = useState(buildInitialOptions(inputMap[step]))
     useEffect(() => setContinue(!!inputMap[step + 1]), [step])
+
+    useEffect(() => {
+        inputMap[step].filter(({ getOptions }) => getOptions)
+            .forEach(({ name, getOptions}) => getOptions().then(r => setAsyncOptions({ ...asyncOptions, [name]: r })))
+    }, [inputMap])
     
     const handleSubmit = e => {
         e.preventDefault();
@@ -25,7 +42,7 @@ export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit, item, ...pro
         }
     }
 
-    const getComponent = ({ componentName, options, name,...props }) => {
+    const getComponent = ({ componentName, options, getOptions, name,...props }) => {
         switch (componentName) {
             case 'MyInput':
                 return <MyInput {...props} key={name} name={name} value={formData[name]} handleChange={e => setFormData({ ...formData, [name]: e.target.value})} />;
@@ -34,7 +51,7 @@ export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit, item, ...pro
             case 'MySelect':
                 return (
                     <MySelect {...props} key={name} name={name} value={formData[name]} handleChange={e => setFormData({ ...formData, [name]: e.target.value})} >
-                        {options.map(({ value, text }) => <span data-value={value} key={value}>{text}</span>)}
+                        {asyncOptions[name].map(({ value, text }) => <span data-value={value} key={value}>{text}</span>)}
                     </MySelect>
                 );
             case 'MyInputRadio':

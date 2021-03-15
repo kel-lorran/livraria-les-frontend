@@ -1,6 +1,6 @@
 import * as S from './style';
 
-export default ({ data, showElements, maxHeight, sideLabel, onClick }) => {
+export default ({ data, showElements, maxHeight, sideLabel, onClick = () => null }) => {
     const titles = []
     const keys = []
     const columnWidths = []

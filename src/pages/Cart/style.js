@@ -7,6 +7,10 @@ export const PageWrapper = styled.div`
 
 export const Container = styled.div`
     ${containerBase}
+    > div {
+        max-width: 760px;
+        margin: 0 auto;
+    }
 `;
 
 export const SectionOne = styled.section`

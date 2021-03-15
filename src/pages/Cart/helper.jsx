@@ -1,9 +1,17 @@
+const quantityFormatter = row => (
+    <>
+        <i className="fas fa-minus" onClick={() => row.quantityControl(-1, row.id)}></i>
+        <span>{row.quantity}</span>
+        <i className="fas fa-plus" onClick={() => row.quantityControl(1, row.id)}></i>
+    </>
+);
+
 export const tableOptions = {
     showElements: [
         {
             title: 'Livro',
             key: 'title',
-            columnWidth: 22
+            columnWidth: 28
         },
         {
             title: 'Preco',
@@ -11,9 +19,9 @@ export const tableOptions = {
         },
         {
             title: 'Quantidade',
-            key: 'quantityControl',
+            key: 'quantity',
+            columnWidth: 8,
+            formatter: quantityFormatter
         }
     ],
-    onRightEdge: <i className="fas fa-info-circle"></i>,
-    onLeftEdge: <i class="far fa-square"></i>
 }
