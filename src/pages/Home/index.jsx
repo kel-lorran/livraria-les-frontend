@@ -4,15 +4,15 @@ import MyCard from '../../components/MyCard';
 import MyHeader from '../../components/MyHeader';
 import * as S from './style';
 
-import { getAllBooksActives, } from '../../actions/bookActions';
+import { getAllMerchandise, } from '../../actions/merchandiseActions';
 
 const Home = () => {
-    const [bookList, setBookList] = useState([]);
+    const [merchandiseList, setMerchandiseList] = useState([]);
 
     useEffect(async () => {
         try {
-            const _activeBookList = await getAllBooksActives().then(r => r.data);
-            setBookList(_activeBookList);
+            const _merchandiseList = await getAllMerchandise().then(r => r.data);
+            setMerchandiseList(_merchandiseList);
         } catch (error) {
             window.alert("Falha na obtenção da lista de livros");
             console.log(error);
@@ -26,7 +26,7 @@ const Home = () => {
                 <S.SectionOne>
                     <S.Container>
                         <div className="book-display">
-                            {bookList.map(b => {
+                            {merchandiseList.map(({book: [b]}) => {
                                 return (
                                     <MyCard
                                         key={b.id}

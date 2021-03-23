@@ -40,12 +40,28 @@ const PrivateRoute = ({ component: Component, isLogged, ...rest }) => (
 );
 
 export default function() {
-    const storageProfileJson = window?.sessionStorage.getItem(PROFILE_CUSTOMER_DATA);
-    let dataProfile;
-    if(storageProfileJson) dataProfile = JSON.parse(storageProfileJson);
+    const storageProfileJson = window?.sessionStorage.getItem(PROFILE_CUSTOMER_DATA) || 'null';
+    const dataProfile = JSON.parse(storageProfileJson);
 
     const [profile, setProfile] = useState(dataProfile);
     const [basket, setBasket] = useState([]);
+
+    const updateBasket = newItem => {
+        let hasInList = false;
+        const _basket = basket.map(m => {
+            if (m.id == newItem.id) {
+                hasInList = true;
+                return {
+                    ...m,
+                    quantity: (m.quantity + newItem.quantity) > 0 ? m.quantity + newItem.quantity : 0
+                }
+            }
+            return m;
+        });
+        setBasket(hasInList ? _basket : [..._basket, newItem]);
+    }
+
+    const clearBasket = () => setBasket([]);
 
     const updateProfile = (newValue = {}) => {
         window?.sessionStorage.setItem(PROFILE_CUSTOMER_DATA, JSON.stringify(newValue));
@@ -65,7 +81,7 @@ export default function() {
                     path="/livro/:productId"
                     children={props => <Single
                         {...props}
-                        setBasket={setBasket}
+                        updateBasket={updateBasket}
                         basket={basket} 
                         profile={profile}
                         updateProfile={updateProfile}
@@ -76,10 +92,11 @@ export default function() {
                     path="/cesta-produtos"
                     children={props => <Cart
                         {...props}
-                        setBasket={setBasket}
+                        updateBasket={updateBasket}
                         basket={basket} 
                         profile={profile}
                         updateProfile={updateProfile}
+                        clearBasket={clearBasket}
                     />}
                 />
                 <Route

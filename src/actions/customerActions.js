@@ -1,6 +1,8 @@
 import { genericPost, genericGet, genericPut } from './constants';
 import { saveNewAddress } from './addressActions';
 
+import { PROFILE_CUSTOMER_DATA } from '../utils/data/constants';
+
 export const saveNewCustomer = async (dataCustomer, dataAddress) => {
     const customerId = await genericPost(dataCustomer,'/customer').then(r => r.data.id);
     return Promise.all(dataAddress.map(a => saveNewAddress(a, customerId)));
@@ -20,4 +22,12 @@ export const searchCustomers = search => {
 
 export const updateCustomer = data => {
     return genericPut(data,`/customer/${data.id}`)
+}
+
+
+export const getFullProfile = () => {
+    const storageProfileJson = window?.sessionStorage.getItem(PROFILE_CUSTOMER_DATA) || 'null';
+    const dataProfile = JSON.parse(storageProfileJson);
+
+    return genericGet(`/customer?_embed=address&_embed=card&active=1&email=${dataProfile?.email}`);
 }

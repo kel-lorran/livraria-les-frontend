@@ -11,14 +11,14 @@ import * as S from './style';
 import { getBookById, } from '../../actions/bookActions';
 import { getMerchandiseById } from '../../actions/merchandiseActions';
 
-const Single = ({ match: { params }, history, setBasket, basket }) => {
-    const [book, setBook] = useState();
+const Single = ({ match: { params }, history, updateBasket, basket }) => {
+    const [merchandise, setMerchandise] = useState();
     const { productId } = params;
 
     useEffect(async () => {
         try {
             const { book: [_book], ...rest} = await getMerchandiseById(productId).then(r => r.data);
-            setBook({ ..._book,...rest });
+            setMerchandise({ ...rest, book: _book });
         } catch (error) {
             window.alert("Falha na obtenção das informações do livro");
             console.log(error);
@@ -26,15 +26,14 @@ const Single = ({ match: { params }, history, setBasket, basket }) => {
     }, [])
 
     const buyItem = () => {
-        setBasket([...basket, {
-            id: book.id,
+        updateBasket({
+            ...merchandise,
             quantity: 1,
-            item: book
-        }]);
+        });
         history.push('/cesta-produtos');
     }
 
-    return book ? ( 
+    return merchandise ? ( 
         <S.PageWrapper>
             <MyHeader />
             <main>
@@ -42,22 +41,22 @@ const Single = ({ match: { params }, history, setBasket, basket }) => {
                     <S.Container>
                         <img className="cover-img" src="https://via.placeholder.com/400x600.jpg?text=Capa+Livro" />
                         <div className="text-content">
-                            <h1>{book.title}</h1>
-                            <p><span className="price">R${(book.price).toLocaleString()}</span><MyButton onClick={buyItem}>Comprar</MyButton></p>
+                            <h1>{merchandise.book.title}</h1>
+                            <p><span className="price">R${(merchandise.price).toLocaleString()}</span><MyButton onClick={buyItem}>Comprar</MyButton></p>
                         </div>
                     </S.Container>
                 </S.SectionOne>
                 <S.SectionTwo>
                     <S.Container>
                         <div>
-                            <h2>Sinopse: {book.title}</h2>
-                            <p>{book.sinopse}</p>
+                            <h2>Sinopse: {merchandise.book.title}</h2>
+                            <p>{merchandise.book.sinopse}</p>
                             <h3>Descrição</h3>
                             <ul>
-                                <li>Autor:{book.author}</li>
-                                <li>Editota: {book.publishing}</li>
-                                <li>Ano: {book.year}</li>
-                                <li>ISBN: {book.ISBN}</li>
+                                <li>Autor:{merchandise.book.author}</li>
+                                <li>Editota: {merchandise.book.publishing}</li>
+                                <li>Ano: {merchandise.book.year}</li>
+                                <li>ISBN: {merchandise.book.ISBN}</li>
                             </ul>
                         </div>
                     </S.Container>

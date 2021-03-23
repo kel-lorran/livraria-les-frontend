@@ -11,10 +11,12 @@ import { login, } from '../../actions/userActions';
 import MyInput from '../../components/MyInput';
 import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 
-const Login = ({ match: { params }, profile, updateProfile, history }) => {
+import { searchAsObject } from '../../utils';
+
+const Login = ({ location: { search }, profile, updateProfile, history }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { redirectUrl } = params;
+    const { redirectUrl } = searchAsObject(search);
 
     const handleSubmit = async e => {
         e.preventDefault();

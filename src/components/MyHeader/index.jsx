@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import * as S from './style';
 import Logo from '../../assets/brands/LesVraria.svg';
 
-const MyHeader = ({ children, authStatus }) => {
+const MyHeader = ({ children, authStatus = '' }) => {
     const buttonByAuthStatus = {
-        undefined: <Link to="/login" key="undefined"><MyButton>Entrar</MyButton></Link>,
+        '': <Link to="/login" key="undefined"><MyButton>Entrar</MyButton></Link>,
         'logged': <Link to="/profile" key="logged"><MyButton>Conta</MyButton></Link>,
         'logging': <Link to="/signin" key="logging"><MyButton>Cadastrar</MyButton></Link>,
     };
@@ -16,7 +16,7 @@ const MyHeader = ({ children, authStatus }) => {
                 <div className="header-items-group">
                     <Link to="/"><img className="logo" src={Logo} /></Link> 
                     {buttonByAuthStatus[authStatus]}
-                    <Link to="/"><MyButton><i className="fas fa-shopping-cart"></i></MyButton></Link>
+                    <Link to="/cesta-produtos"><MyButton><i className="fas fa-shopping-cart"></i></MyButton></Link>
                 </div>
             </S.Container>
             {children && (

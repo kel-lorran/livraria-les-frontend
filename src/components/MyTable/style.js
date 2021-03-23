@@ -71,5 +71,11 @@ export const Wrapper = styled.div`
             padding: 5px 0;
             border-top: 2px solid #C4C4C4;
         }
+        ${props => props.rowSelected ? `
+            tr:nth-of-type(${props.rowSelected}) {
+                background: #545454;
+                color: white;
+            }
+        ` : ''}
     }
 `;

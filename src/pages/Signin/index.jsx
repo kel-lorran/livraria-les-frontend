@@ -11,10 +11,12 @@ import { inputMap } from './helper';
 import { saveNewCustomer } from '../../actions/customerActions';
 import { login } from '../../actions/userActions';
 
-const Signin = ({ match: { params }, profile, updateProfile, history }) => {
+import { searchAsObject } from '../../utils';
+
+const Signin = ({ location: { search }, profile, updateProfile, history }) => {
     const [stepCurrent, setStepCurrent] =  useState(1);
     const [dataToSend, setDataToSend] = useState();
-    const { redirectUrl } = params;
+    const { redirectUrl } = searchAsObject(search);
 
     const createCustomerSubmit = async data => {
         if(dataToSend) {

@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import * as S from './style';
 
 export default ({ data, showElements, maxHeight, sideLabel, onClick = () => null }) => {
+    const [rowIndexSelected, setRowIndexSelected] = useState();
     const titles = []
     const keys = []
     const columnWidths = []
@@ -14,10 +16,10 @@ export default ({ data, showElements, maxHeight, sideLabel, onClick = () => null
     });
 
     return (
-        <S.Wrapper columnWidths={columnWidths} maxHeight={maxHeight}>
-            <div className="side-label">
+        <S.Wrapper columnWidths={columnWidths} maxHeight={maxHeight} rowSelected={rowIndexSelected}>
+            {sideLabel && <div className="side-label">
                 <span>{sideLabel}</span>
-            </div>
+            </div>}
             <div className="table-container">
                 <table>
                     <thead>
@@ -29,7 +31,10 @@ export default ({ data, showElements, maxHeight, sideLabel, onClick = () => null
                     </thead>
                     <tbody>
                         {
-                            data.map(r => <tr onClick={() => onClick(r)} key={r.id}>
+                            data.map((r, i) => <tr onClick={() => {
+                                onClick(r, i);
+                                setRowIndexSelected(i + 1);
+                            }} key={r.id}>
                                 {keys.map(k => <td key={k}>{formatters[k] ? formatters[k](r) : r[k]}</td>)}
                             </tr>)
                         }
