@@ -10,7 +10,6 @@ export default ({ type, handleSubmit, handleClose, order }) => {
     const cardListDescriptionHelper = tableOptionsCard.showElements;
 
     const createDescriptionsList = (helper, item) => {
-        debugger
         return helper.reduce((ac, inp) => {
             return [...ac, <React.Fragment key={'dt' + inp.key}><dt>{inp.title}</dt><dd>{item[inp.key]}</dd></React.Fragment>]
         }, [])

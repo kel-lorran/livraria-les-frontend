@@ -34,8 +34,8 @@ export default ({ data, showElements, maxHeight, sideLabel, onClick = () => null
                             data.map((r, i) => <tr onClick={() => {
                                 onClick(r, i);
                                 setRowIndexSelected(i + 1);
-                            }} key={r.id}>
-                                {keys.map(k => <td key={k}>{formatters[k] ? formatters[k](r) : r[k]}</td>)}
+                            }} key={`tr_${r.id}`} key={`tr_${r.id}`}>
+                                {keys.map(k => <td key={k}>{formatters[k] ? formatters[k](r, k) : r[k]}</td>)}
                             </tr>)
                         }
                     </tbody>

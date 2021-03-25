@@ -4,3 +4,5 @@ export const searchAsObject = search => {
         return { ...ac, [key]: value }
     },{})
 }
+
+export const abbreviateText = (text, len = 999) => (text || '').toString().replace(new RegExp(`(?<=.{${len}}).+`), '...');

@@ -33,7 +33,7 @@ const Login = ({ history, updateBasket, clearBasket, profile, basket }) => {
 
     useEffect(async () => {
         if(profile) {
-            const [{ address, card }] = await getFullProfile().then(r => r.data);
+            const { address, card } = await getFullProfile().then(r => r.data[0]);
             setAddressList(address);
             setCardList(card);
         }
@@ -50,7 +50,7 @@ const Login = ({ history, updateBasket, clearBasket, profile, basket }) => {
             card: [selectedCard],
             cupons,
             status: 'compra - em aprovação',
-            data: (new Date()).getTime()
+            date: (new Date()).getTime()
         });
         setShowModal('aboutOrder');
     }

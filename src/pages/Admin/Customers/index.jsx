@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
+import AdminHeader from '../Shared/AdminHeader';
 import SimpleTextAsButton from '../../../components/SimpleTextAsButton';
 import MyModal from '../../../components/MyModal';
-import AdminHeader from '../Shared/AdminHeader';
 
 import * as S from './style';
 

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { pageWrapperBase, containerBase } from '../shared/style';
+export * from '../shared/style';
 
 export const PageWrapper = styled.div`
     ${pageWrapperBase}
@@ -32,7 +33,3 @@ export const SectionTwo = styled.section`
         margin-bottom: 56px; 
     }
 `;
-
-export const WrapperDescriptionList = styled.dl``;
-
-export const ModalFooter = styled.div``;

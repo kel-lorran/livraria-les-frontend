@@ -77,7 +77,7 @@ const Address = () => {
                 </S.Container>
             </main>
             <MyModal show={showModal} handleClose={handleCloseModal}>
-                <FormHelper setResultIsFiltered={setResultIsFiltered} setAdressList={setAdressList} type={showModal} handleClose={handleCloseModal} setShowModal={setShowModal} itemSelected={itemSelected} />
+                <FormHelper setResultIsFiltered={setResultIsFiltered} type={showModal} handleClose={handleCloseModal} setShowModal={setShowModal} itemSelected={itemSelected} />
             </MyModal>
         </S.PageWrapper>
     )

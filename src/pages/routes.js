@@ -23,6 +23,8 @@ import Cart from './Cart';
 
 //customer pages
 import Profile from './Profile';
+import ProfileAddress from './Profile/address';
+import ProfileCard from './Profile/card';
 
 import { PROFILE_CUSTOMER_DATA } from '../utils/data/constants';
 
@@ -33,7 +35,7 @@ const PrivateRoute = ({ component: Component, isLogged, ...rest }) => (
             isLogged() ? (
                 <Component {...props} />
             ) : (
-                <Redirect to={{ pathname: "/", state: { from: props.location } }} />
+                <Redirect to={{ pathname: '/login',  search: `?redirectUrl=${props.location.pathname}`, state: { from: props.location } }} />
             )
         }
     />
@@ -110,9 +112,15 @@ export default function() {
                 <Route path="/signin">
                     <Signin path="/address" address  profile={profile} updateProfile={updateProfile} />
                 </Route>
-                <Route path="/profile">
-                    <Profile  profile={profile} updateProfile={updateProfile} />
-                </Route>
+                <PrivateRoute exact path="/profile" isLogged={isLogged} component={
+                    () => <Profile profile={profile} updateProfile={updateProfile} />
+                } />
+                <PrivateRoute exact path="/profile/endereco" isLogged={isLogged} component={
+                    props => <ProfileAddress {...props} profile={profile} updateProfile={updateProfile} />
+                } />
+                <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={
+                    props => <ProfileCard {...props} profile={profile} updateProfile={updateProfile} />
+                } />
                 <PrivateRoute exact path="/admin" isLogged={isLogged} component={
                     () => <Dashboard profile={profile} updateProfile={updateProfile} />
                 } />
