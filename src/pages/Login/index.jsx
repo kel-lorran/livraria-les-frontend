@@ -13,7 +13,7 @@ import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 
 import { searchAsObject } from '../../utils';
 
-const Login = ({ location: { search }, profile, updateProfile, history }) => {
+const Login = ({ location: { search }, updateProfile, history }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { redirectUrl } = searchAsObject(search);
@@ -25,8 +25,8 @@ const Login = ({ location: { search }, profile, updateProfile, history }) => {
         if(isLogged) {
             updateProfile({ status: isLogged, email });
             window.alert('Sucesso na autenticação')
-            if(redirectUrl)
-                history.replace(redirectUrl);
+
+            history.replace(redirectUrl || '/');
         } else {
             window.alert('Falha na autenticação, verifique o preenchimento e tente novamente.')
         }

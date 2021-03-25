@@ -89,7 +89,7 @@ export const inputMap = [
         {
             componentName: 'MyInput',
             name: 'weight',
-            label:  'peso(kg)',
+            label:  'peso(grama)',
             type: 'text',
             halfSize: true,
             required: true

@@ -39,14 +39,18 @@ export const WrapperDescriptionList = styled.dl`
     }
 
     dt {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: bold;
+        display: inline-block;
+        min-width: 100px;
         &::after {
             content: ':';
         }
     }
     dd {
         font-size: 14px;
+        display: inline-block;
+        margin-left: 1.5em;
     }
 `
 
@@ -71,4 +75,23 @@ export const ModalHeader = styled.div`
     }
 `
 
-export const ModalFooter = styled.div``;
+export const ModalFooter = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    h3 {
+        font-weight: normal;
+        font-size: 28px;
+        line-height: 33px;
+        text-align: center;
+        color: #000000;
+        width: 100%;
+    }
+    > * {
+        margin: 8px 0;
+    }
+`;

@@ -1,10 +1,12 @@
 import { genericPost, genericGet, genericPut } from './constants';
 import { saveNewAddress } from './addressActions';
+import { saveNewUser } from './userActions';
 
 import { PROFILE_CUSTOMER_DATA } from '../utils/data/constants';
 
-export const saveNewCustomer = async (dataCustomer, dataAddress) => {
+export const saveNewCustomer = async ({ passwordRedundancy, password, ...dataCustomer }, dataAddress) => {
     const customerId = await genericPost(dataCustomer,'/customer').then(r => r.data.id);
+    await saveNewUser({ password, customerId, email: dataCustomer.email });
     return Promise.all(dataAddress.map(a => saveNewAddress(a, customerId)));
 }
 

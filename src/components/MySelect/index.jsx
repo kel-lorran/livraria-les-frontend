@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as S from './style';
 
-const MySelect = ({ value = '', name = Math.random().toString(), label, placeholder, required, handleChange, children, halfSize, errorMessage = "verificar preenchimento"}) => {
+const MySelect = ({ value = '', name = Math.random().toString(), label, placeholder, required, handleChange, children, halfSize, errorMessage = "verificar preenchimento", ...props }) => {
     const [displayText, setDisplayText] = useState(value)
     const options = useRef(null);
     const id = `id_inp_${name}`;
@@ -24,7 +24,7 @@ const MySelect = ({ value = '', name = Math.random().toString(), label, placehol
 
     return (
         <S.Wrapper halfSize={halfSize}>
-            <input value={displayText}  name={name} type="text" id={id} required={required} autoComplete="off" readOnly placeholder={`${placeholder}${required ? '*' : ''}`} />
+            <input {...props} value={displayText}  name={name} type="text" id={id} required={required} autoComplete="off" readOnly placeholder={`${placeholder}${required ? '*' : ''}`} />
             {label && <label htmlFor={id} className={required ? 'is-required ' : ''}>{label}</label>}
             <span ref={options} className="options" onClick={getValue}>
                 {children}

@@ -10,6 +10,20 @@ export const PageWrapper = styled.div`
         display: flex;
         justify-content: flex-end;
     }
+    .table-group {
+        > * {
+            margin-bottom: 56px;
+        }
+    }
+    .manager-profile-item {
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+        color: inherit;
+        &:not(.add-to-continue) {
+            margin-bottom: 24px;
+        }
+    }
 `;
 
 export const Container = styled.div`
@@ -24,12 +38,16 @@ export const SectionOne = styled.section`
 `;
 
 export const SectionTwo = styled.section`
-    .table-group {
-        > * {
-            margin-bottom: 56px;
-        }
-    }
     .cupon-group {
         margin-bottom: 56px; 
     }
+    .main-action {
+        margin-bottom: 56px;
+        display: flex;
+        justify-content: flex-end;
+    }
+`;
+
+export const BillingAdrressWrapper = styled.div`
+    width: 100%;
 `;

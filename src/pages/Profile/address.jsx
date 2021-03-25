@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 import MyModal from '../../components/MyModal';
@@ -11,9 +12,9 @@ import { TableHelper } from './helper';
 import { getFullProfile } from '../../actions/customerActions';
 import ModalContentHelper from './ModalContentHelper';
 
-const Address = ({ match: { params }, profile }) => {
+const Address = () => {
+    const storeUser = useSelector(store => store.user);
     const [customer, setCustomer] = useState();
-    const loginStatus = profile ? 'logged' : '';
     const [showModal, setShowModal] = useState(false);
     const [fetchAgain, setFetchAgain] = useState(false);
     const [itemSelected, setItemSelected] = useState();
@@ -35,7 +36,7 @@ const Address = ({ match: { params }, profile }) => {
 
     return (
         <S.PageWrapper>
-            <ProfileHeader authStatus={loginStatus}  />
+            <ProfileHeader />
             <main>
                 <S.Container>
                     <div>

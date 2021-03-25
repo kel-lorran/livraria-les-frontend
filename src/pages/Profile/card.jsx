@@ -13,7 +13,7 @@ import WithModal from '../../hocs/withModal';
 
 import { getFullProfile } from '../../actions/customerActions';
 
-const Card = ({ loginStatus, setShowModal, fetchAgain, setModalContent, setItemSelected }) => {
+const Card = ({ setShowModal, fetchAgain, setModalContent, setItemSelected }) => {
     const [customer, setCustomer] = useState();
 
     useEffect(async () => {
@@ -30,7 +30,7 @@ const Card = ({ loginStatus, setShowModal, fetchAgain, setModalContent, setItemS
 
     return (
         <S.PageWrapper>
-            <ProfileHeader authStatus={loginStatus}  />
+            <ProfileHeader />
             <main>
                 <S.Container>
                     <div>

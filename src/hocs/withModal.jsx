@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import MyModal from "../components/MyModal";
 
 export default (WrappedComponent) => {
     return props => {
-        const loginStatus = props.profile ? 'logged' : '';
         const [showModal, setShowModal] = useState(false);
         const [modalContent, setModalContent] = useState();
         const [fetchAgain, setFetchAgain] = useState(false);
@@ -16,7 +15,7 @@ export default (WrappedComponent) => {
 
         return (
             <>
-                <WrappedComponent {...props} setShowModal={setShowModal} setModalContent={setModalContent} fetchAgain={fetchAgain} loginStatus={loginStatus} setItemSelected={setItemSelected} />
+                <WrappedComponent {...props} setShowModal={setShowModal} setModalContent={setModalContent} fetchAgain={fetchAgain} setItemSelected={setItemSelected} handleCloseModal={handleClose} />
                 <MyModal show={showModal} handleClose={handleClose}>
                     {modalContent && modalContent({ type: showModal, handleClose, setShowModal, itemSelected})}
                 </MyModal>

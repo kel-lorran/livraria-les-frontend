@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as S from './style';
 
-export default ({ data, showElements, maxHeight, sideLabel, onClick = () => null }) => {
+export default ({ data, showElements, maxHeight, sideLabel, onClick }) => {
     const [rowIndexSelected, setRowIndexSelected] = useState();
     const titles = []
     const keys = []
@@ -32,8 +32,10 @@ export default ({ data, showElements, maxHeight, sideLabel, onClick = () => null
                     <tbody>
                         {
                             data.map((r, i) => <tr onClick={() => {
-                                onClick(r, i);
-                                setRowIndexSelected(i + 1);
+                                if (onClick) {
+                                    onClick(r, i);
+                                    setRowIndexSelected(i + 1);
+                                }
                             }} key={`tr_${r.id}`} key={`tr_${r.id}`}>
                                 {keys.map(k => <td key={k}>{formatters[k] ? formatters[k](r, k) : r[k]}</td>)}
                             </tr>)

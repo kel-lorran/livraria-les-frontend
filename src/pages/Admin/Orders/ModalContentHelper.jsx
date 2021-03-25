@@ -21,7 +21,7 @@ export default ({ type, handleClose, itemSelected, setShowModal }) => {
 
     const createDescriptionsList = (helper, item) => {
         return helper.reduce((ac, inp) => {
-            return [...ac, <React.Fragment key={'dt' + inp.key}><dt>{inp.title}</dt><dd>{item[inp.key]}</dd></React.Fragment>]
+            return [...ac, <React.Fragment key={'dt' + inp.key}><dt>{inp.title}</dt><dd>{item[inp.key]}</dd><br /></React.Fragment>]
         }, [])
     }
 
@@ -34,13 +34,13 @@ export default ({ type, handleClose, itemSelected, setShowModal }) => {
                         <MyButton onClick={() => setShowModal('updateStatusOrders')}>Alterar Status</MyButton>
                     </S.ModalHeader>
                     <S.WrapperDescriptionList>
-                        <h5>Produtos</h5>
-                        {itemSelected.merchandise.map(m => createDescriptionsList(productsListDescriptionHelper, m))}
-                        <h5>Endereços</h5>
-                        {itemSelected.address.map(m => createDescriptionsList(addressListDescriptionHelper, m))}
-                        <h5>Cartoes</h5>
+                        <h4>Produtos</h4>
+                        {itemSelected.merchandise.map(({ book, ...rest }) => createDescriptionsList(productsListDescriptionHelper, { ...book, ...rest }))}
+                        <h4>Endereço de entrega</h4>
+                        {createDescriptionsList(addressListDescriptionHelper, itemSelected.address.delivery)}
+                        <h4>Cartões</h4>
                         {itemSelected.card.map(m => createDescriptionsList(cardListDescriptionHelper, m))}
-                        <h5>Cupons</h5>
+                        {!!itemSelected.cupons.length && <h4>Cupons</h4>}
                         {itemSelected.cupons.map(c => <span key={c}>{c + '  '}</span>)}
                     </S.WrapperDescriptionList>
                 </>

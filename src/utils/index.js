@@ -6,3 +6,8 @@ export const searchAsObject = search => {
 }
 
 export const abbreviateText = (text, len = 999) => (text || '').toString().replace(new RegExp(`(?<=.{${len}}).+`), '...');
+
+export const logout = () => {
+    window?.sessionStorage?.clear();
+    window?.location?.reload();
+}

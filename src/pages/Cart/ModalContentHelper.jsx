@@ -1,17 +1,19 @@
 import React from 'react';
-import MyButton from "../../components/MyButton"
+
+import MyButton from '../../components/MyButton';
+import MySelect from '../../components/MySelect';
 
 import * as S from './style';
 import { tableOptionsProducts, tableOptionsAddress, tableOptionsCard } from './helper';
 
-export default ({ type, handleSubmit, handleClose, order }) => {
+export default ({ type, handleSubmit, handleClose, order, addressList }) => {
     const productsListDescriptionHelper = tableOptionsProducts.showElements;
     const addressListDescriptionHelper = tableOptionsAddress.showElements;
     const cardListDescriptionHelper = tableOptionsCard.showElements;
 
     const createDescriptionsList = (helper, item) => {
         return helper.reduce((ac, inp) => {
-            return [...ac, <React.Fragment key={'dt' + inp.key}><dt>{inp.title}</dt><dd>{item[inp.key]}</dd></React.Fragment>]
+            return [...ac, <React.Fragment key={'dt' + inp.key}><dt>{inp.title}</dt><dd>{item[inp.key]}</dd><br /></React.Fragment>]
         }, [])
     }
 
@@ -19,18 +21,28 @@ export default ({ type, handleSubmit, handleClose, order }) => {
         case 'aboutOrder':
             return (
                 <>
-                    <h4>Pedido:</h4>
                     <S.WrapperDescriptionList>
-                        <h5>Produtos</h5>
-                        {order.merchandise.map(m => createDescriptionsList(productsListDescriptionHelper, m))}
-                        <h5>Endereços</h5>
-                        {order.address.map(m => createDescriptionsList(addressListDescriptionHelper, m))}
-                        <h5>Cartoes</h5>
+                        <h4>Produtos</h4>
+                        {order.merchandise.map(({ book, ...rest }) => createDescriptionsList(productsListDescriptionHelper, { ...book, ...rest }))}
+                        <h4>Endereço de entrega</h4>
+                        {createDescriptionsList(addressListDescriptionHelper, order.address.delivery)}
+                        <h4>Cartões</h4>
                         {order.card.map(m => createDescriptionsList(cardListDescriptionHelper, m))}
-                        <h5>Cupons</h5>
+                        {!!order.cupons.length && <h4>Cupons</h4>}
                         {order.cupons.map(c => <span key={c}>{c + '  '}</span>)}
                     </S.WrapperDescriptionList>
                     <S.ModalFooter>
+                        <S.BillingAdrressWrapper>
+                            <MySelect className="select-billing-address" handleChange={e => {debugger}} placeholder="usar endereço de entrega para cobrança">
+                                <>
+                                    <span data-value="">usar endereço de entrega para cobrança</span>
+                                    {addressList.map(({ addressLabel, publicPlaceType, publicPlaceName, id }) => {
+                                        const text = `${addressLabel} - ${publicPlaceType} ${publicPlaceName}`;
+                                        return <span data-value={id} key={id}>{text}</span>
+                                    })}
+                                </>
+                            </MySelect>
+                        </S.BillingAdrressWrapper>
                         <MyButton onClick={() => handleClose()}>Cancelar</MyButton>
                         <MyButton onClick={handleSubmit}>Confirmar</MyButton>
                     </S.ModalFooter>

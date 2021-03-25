@@ -18,12 +18,12 @@ export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit, item, ...pro
     const [step, setStep] = useState(0);
     const [mustContinue, setContinue] = useState(false);
     const [formData, setFormData] = useState(item || buildInitialState(inputMap[step].map(e => e.name)));
-    const [asyncOptions, setAsyncOptions] = useState(buildInitialOptions(inputMap))
+    const [asyncOptions, setAsyncOptions] = useState({});
     useEffect(() => setContinue(!!inputMap[step + 1]), [step])
 
     useEffect(() => {
-        inputMap.map(inp => inp.filter(({ getOptions }) => getOptions)
-            .forEach(({ name, getOptions}) => getOptions().then(r => setAsyncOptions({ ...asyncOptions, [name]: r }))))
+        inputMap.map(pass => pass
+            .forEach(({ name, getOptions}) => getOptions && getOptions().then(r => setAsyncOptions({ ...asyncOptions, [name]: r }))))
     }, [inputMap])
     
     const handleSubmit = e => {
@@ -45,7 +45,7 @@ export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit, item, ...pro
             case 'MySelect':
                 return (
                     <MySelect {...props} key={name} name={name} value={formData[name]} handleChange={e => setFormData({ ...formData, [name]: e.target.value})} >
-                        {asyncOptions[step][name].map(({ value, text }) => <span data-value={value} key={value}>{text}</span>)}
+                        {(getOptions ? asyncOptions[name] || [] : options).map(({ value, text }) => <span data-value={value} key={value}>{text}</span>)}
                     </MySelect>
                 );
             case 'MyInputRadio':

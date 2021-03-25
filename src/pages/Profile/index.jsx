@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import ProfileHeader from './ProfileHeader';
@@ -13,11 +14,11 @@ import ModalContentHelper from './ModalContentHelper';
 import { getFullProfile } from '../../actions/customerActions';
 import MyButton from '../../components/MyButton';
 
-const Profile = ({ history, profile }) => {
+const Profile = ({ history }) => {
+    const storeUser = useSelector(store => store.user);
     const [showModal, setShowModal] = useState(false);
     const [fetchAgain, setFetchAgain] = useState(false);
     const [customer, setCustomer] = useState();
-    const loginStatus = profile ? 'logged' : '';
 
     const handleCloseModal = (shouldUpdate) => {
         setShowModal(false);
@@ -25,21 +26,21 @@ const Profile = ({ history, profile }) => {
     }
 
     useEffect(async () => {
-        if(profile) {
+        if(storeUser) {
             const _customer = await getFullProfile().then(r => r.data[0]);
             setCustomer(_customer);
         }
-    }, [profile, fetchAgain])
+    }, [storeUser, fetchAgain])
 
     const createDescriptionsList = (defaultHelper, item) => {
         return defaultHelper.map(step => step.reduce((ac, inp) => {
-            return [...ac, <React.Fragment key={'dt' + inp.name}><dt>{inp.label || inp.placeholder}</dt><dd>{item[inp.name]}</dd></React.Fragment>]
+            return [...ac, <React.Fragment key={'dt' + inp.name}><dt>{inp.label || inp.placeholder}</dt><dd>{item[inp.name]}</dd><br /></React.Fragment>]
         }, []))
     }
 
     return customer ? (
         <S.PageWrapper>
-            <ProfileHeader authStatus={loginStatus}  />
+            <ProfileHeader />
             <main>
                 <S.SectionOne>
                     <S.Container>

@@ -1,4 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { setUser } from '../store/user';
+
 import {
     BrowserRouter as Router,
     Route,
@@ -28,25 +32,29 @@ import ProfileCard from './Profile/card';
 
 import { PROFILE_CUSTOMER_DATA } from '../utils/data/constants';
 
-const PrivateRoute = ({ component: Component, isLogged, ...rest }) => (
-    <Route
-        {...rest}
-        render={props =>
-            isLogged() ? (
-                <Component {...props} />
-            ) : (
-                <Redirect to={{ pathname: '/login',  search: `?redirectUrl=${props.location.pathname}`, state: { from: props.location } }} />
-            )
-        }
-    />
-);
+const PrivateRoute = ({ component: Component, isLogged, ...rest }) => {
+    return (
+        <Route
+            {...rest}
+            render={props =>
+                isLogged() ? (
+                    <Component {...props} />
+                ) : (
+                    <Redirect to={{ pathname: '/login',  search: `?redirectUrl=${props.location.pathname}`, state: { from: props.location } }} />
+                )
+            }
+        />
+    );
+}
 
 export default function() {
+    const storeUser = useSelector(store => store.user);
+    const dispatch =  useDispatch();
     const storageProfileJson = window?.sessionStorage.getItem(PROFILE_CUSTOMER_DATA) || 'null';
     const dataProfile = JSON.parse(storageProfileJson);
-
-    const [profile, setProfile] = useState(dataProfile);
     const [basket, setBasket] = useState([]);
+
+    useEffect(() => dataProfile && dispatch(setUser(dataProfile)), [])
 
     const updateBasket = newItem => {
         let hasInList = false;
@@ -67,16 +75,16 @@ export default function() {
 
     const updateProfile = (newValue = {}) => {
         window?.sessionStorage.setItem(PROFILE_CUSTOMER_DATA, JSON.stringify(newValue));
-        setProfile(newValue);
+        dispatch(setUser(newValue));
     }
 
-    const isLogged = () => !!profile?.email;
+    const isLogged = () => !!storeUser?.email || dataProfile;
 
     return (
         <Router>
             <Switch>
                 <Route exact path="/">
-                    <Home profile={profile} />
+                    <Home/>
                 </Route>
                 <Route
                     exact
@@ -85,8 +93,6 @@ export default function() {
                         {...props}
                         updateBasket={updateBasket}
                         basket={basket} 
-                        profile={profile}
-                        updateProfile={updateProfile}
                     />}
                 />
                 <Route
@@ -96,49 +102,28 @@ export default function() {
                         {...props}
                         updateBasket={updateBasket}
                         basket={basket} 
-                        profile={profile}
-                        updateProfile={updateProfile}
                         clearBasket={clearBasket}
                     />}
                 />
                 <Route
                     path="/login"
-                    children={props => <Login {...props}  profile={profile} updateProfile={updateProfile} />}
+                    children={props => <Login {...props} updateProfile={updateProfile} />}
                 />
                 <Route
                     path="/signin"
-                    children={props => <Signin {...props}  profile={profile} updateProfile={updateProfile} />}
+                    children={props => <Signin {...props}  updateProfile={updateProfile} />}
                 />
-                <Route path="/signin">
-                    <Signin path="/address" address  profile={profile} updateProfile={updateProfile} />
-                </Route>
-                <PrivateRoute exact path="/profile" isLogged={isLogged} component={
-                    () => <Profile profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute exact path="/profile/endereco" isLogged={isLogged} component={
-                    props => <ProfileAddress {...props} profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={
-                    props => <ProfileCard {...props} profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute exact path="/admin" isLogged={isLogged} component={
-                    () => <Dashboard profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute path="/admin/livros" isLogged={isLogged} component={
-                    () => <Books profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute exact path="/admin/clientes" isLogged={isLogged} component={
-                    () => <Customers profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute path="/admin/clientes/endereco" isLogged={isLogged} component={
-                    () => <Addresses profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute path="/admin/pedidos" isLogged={isLogged} component={
-                    () => <Orders profile={profile} updateProfile={updateProfile} />
-                } />
-                <PrivateRoute path="/admin/estoque" isLogged={isLogged} component={
-                    () => <Stock profile={profile} updateProfile={updateProfile} />
-                } />
+
+                <PrivateRoute exact path="/profile" isLogged={isLogged} component={() => <Profile />} />
+                <PrivateRoute exact path="/profile/endereco" isLogged={isLogged} component={() => <ProfileAddress />} />
+                <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={() => <ProfileCard />} />
+
+                <PrivateRoute exact path="/admin" isLogged={isLogged} component={() => <Dashboard />} />
+                <PrivateRoute path="/admin/livros" isLogged={isLogged} component={() => <Books />} />
+                <PrivateRoute exact path="/admin/clientes" isLogged={isLogged} component={() => <Customers />} />
+                <PrivateRoute path="/admin/clientes/endereco" isLogged={isLogged} component={() => <Addresses />} />
+                <PrivateRoute path="/admin/pedidos" isLogged={isLogged} component={() => <Orders />} />
+                <PrivateRoute path="/admin/estoque" isLogged={isLogged} component={() => <Stock />} />
             </Switch>
         </Router>
     )

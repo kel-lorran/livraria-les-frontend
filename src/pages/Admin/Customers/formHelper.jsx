@@ -16,7 +16,7 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
     
     const createCustomerSubmit = async data => {
         if(dataToSend) {
-            await saveNewCustomer({ ...dataToSend, active: 1}, [{...data, addressType: "cobranca", addressLabel: `${data.addressLabel} cobrança` }, {...data, addressType: "entrega", addressLabel: `${data.addressLabel} entrega` }] );
+            await saveNewCustomer({ ...dataToSend, active: 1}, [data] );
             handleClose(true);
             setStepCurrent(1);
         } else {
@@ -66,7 +66,7 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
 
     const createDescriptionsList = (defaultHelper, item) => {
         return defaultHelper.map(step => step.reduce((ac, inp) => {
-            return [...ac, <React.Fragment key={'dt' + inp.name}><dt>{inp.label || inp.placeholder}</dt><dd>{item[inp.name]}</dd></React.Fragment>]
+            return [...ac, <React.Fragment key={'dt' + inp.name}><dt>{inp.label || inp.placeholder}</dt><dd>{item[inp.name]}</dd><br /></React.Fragment>]
         }, []))
     }
 

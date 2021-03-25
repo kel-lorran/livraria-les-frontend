@@ -2,7 +2,7 @@ import { genericPost, genericGet, genericPut } from './constants';
 import { getBookById, updateBook } from './bookActions'
 
 export const getAllMerchandise = async () => {
-    return genericGet('/merchandise?_embed=book');
+    return genericGet('/merchandise?_embed=book&active=1');
 }
 
 export const getMerchandiseById = async id => {

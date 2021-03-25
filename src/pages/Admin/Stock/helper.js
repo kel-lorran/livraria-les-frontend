@@ -1,4 +1,6 @@
-import { getAllBooksActives } from '../../../actions/bookActions'
+import { abbreviateText } from '../../../utils';
+
+import { getAllBooksActives } from '../../../actions/bookActions';
 
 const buildOptionsBook = async () => {
     const books = await getAllBooksActives().then(r => r.data);
@@ -9,6 +11,10 @@ const buildOptionsBook = async () => {
             text
         }
     })
+}
+
+const bookFormatter = row => {
+    return row.book.map(b => <div key={`book_${b.id}`}><span>{`Titulo: ${abbreviateText(b.title, 30)}`}</span><span style={{ float: 'right'}}>{`ISBN: ${b.ISBN}`}</span></div>)
 }
 
 export const inputMap = [
@@ -35,5 +41,24 @@ export const inputMap = [
             options: [],
             getOptions: buildOptionsBook
         },
-    ]
+    ],
 ]
+
+export const tableOptions = {
+    showElements: [
+        {
+            title: 'quantidade',
+            key: 'quantity'
+        },
+        {
+            title: 'preço(un/R$)',
+            key: 'price'
+        },
+        {
+            title: 'produtos',
+            key: 'book',
+            formatter: bookFormatter,
+        }
+    ]
+}
+ 

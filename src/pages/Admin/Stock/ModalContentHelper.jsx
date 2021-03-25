@@ -7,12 +7,12 @@ import { incrementStock } from '../../../actions/merchandiseActions';
 
 import { inputMap } from './helper';
 
-export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setList, setActiveList, setInactiveList, setResultIsFiltered }) => {
+export default ({ type, handleClose, itemSelected, setShowModal, setList, setActiveList, setInactiveList, setResultIsFiltered }) => {
     const [stepCurrent, setStepCurrent] =  useState(1);
     const [dataToSend, setDataToSend] = useState();
 
     const incrementMerchandiseSubmit = async data => {
-        await incrementStock(data);
+        await incrementStock({ ...data, active: 1 });
         handleClose(true);
     }
 

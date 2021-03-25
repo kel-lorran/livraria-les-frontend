@@ -2,24 +2,20 @@ import { useState, useEffect } from 'react';
 
 import AdminHeader from '../Shared/AdminHeader'
 import SimpleTextAsButton from '../../../components/SimpleTextAsButton';
-import MyModal from '../../../components/MyModal';
+import MyTable from '../../../components/MyTable';
 
 import * as S from './style';
 
-import { FormHelper } from './formHelper';
+import ModalContentHelper from './ModalContentHelper';
+import { tableOptions } from './helper';
+
+import WithModal from '../../../hocs/withModal';
 
 import { getAllMerchandise } from '../../../actions/merchandiseActions';
 
-const Stock = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [updateMerchandiseList, setUpdateMerchandiseList] = useState(false);
+const Stock = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, handleCloseModal }) => {
     const [merchandiseList, setMerchandiseList] = useState();
     const [resultIsFiltered, setResultIsFiltered] = useState(false);
-
-    const handleCloseModal = (shouldUpdate) => {
-        setShowModal(false);
-        if(shouldUpdate) setUpdateMerchandiseList(!updateMerchandiseList);
-    }
 
     useEffect(async () => {
         try {
@@ -29,7 +25,9 @@ const Stock = () => {
             window.alert("Falha na obtenção da lista de mercadorias");
             console.log(error);
         }
-    }, [updateMerchandiseList])
+    }, [fetchAgain])
+
+    useEffect(() => setModalContent(props => props => <ModalContentHelper {...props} />), []);
 
     return (
         <S.PageWrapper>
@@ -56,18 +54,14 @@ const Stock = () => {
                                 </>
                             )}
                         </div>
-                        {/* <div className="table-group">
-                            {activeCustomerList && <TableHelper data={activeCustomerList} type="activeCustomers" selectItem={item => setItemSelected(item)} />}
-                            {inactiveCustomerList && <TableHelper data={inactiveCustomerList} type="inactiveCustomers" selectItem={item => setItemSelected(item)} />}
-                        </div> */}
+                        <div className="table-group">
+                            {merchandiseList && <MyTable data={merchandiseList} {...tableOptions} maxHeight="150px" />}
+                        </div>
                     </div>
                 </S.Container>
             </main>
-            <MyModal show={showModal} handleClose={handleCloseModal}>
-                <FormHelper setResultIsFiltered={setResultIsFiltered} setList={setMerchandiseList} type={showModal} handleClose={handleCloseModal} setShowModal={setShowModal} />
-            </MyModal>
         </S.PageWrapper>
     )
 }
 
-export default Stock;
+export default WithModal(Stock);
