@@ -5,9 +5,23 @@ export const saveNewOrder = data => {
 }
 
 export const getAllOrders = () => {
-    return genericGet('/order');
+    if(/admin/g.test(window.location.pathname))
+        return genericGet('/order');
+    const storageProfileJson = window?.sessionStorage.getItem('profileCustomerData') || 'null';
+    const dataProfile = JSON.parse(storageProfileJson);
+    return genericGet(`/order?customer.email=${dataProfile.email}`);
 }
 
 export const updateOrder = data => {
     return genericPut(data,`/order/${data.id}`);
+}
+
+export const searchOrders = search => {
+    return genericGet(`/order${search}`)
+}
+
+export const exchangeMerchandiseReceived = async id => {
+    const orderToUpdate = await genericGet(`/order/${id}`).then(r => r.data);
+    const exchangedMerchandiseUpdated = orderToUpdate.exchangedMerchandise.map(m => ({ ...m, status: m.status === 'aprovada - aguardando recebimento' ? 'finalizada' : m.status }))
+    await genericPut({ ...orderToUpdate, status: 'mercadoria devolvida', exchangedMerchandise: exchangedMerchandiseUpdated },`/order/${id}`);
 }

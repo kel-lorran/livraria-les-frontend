@@ -83,6 +83,7 @@ export const ModalFooter = styled.div`
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
+    width: 90vw;
     h3 {
         font-weight: normal;
         font-size: 28px;

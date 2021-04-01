@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
     position: relative;
     display: flex;
     flex-direction: column-reverse;
-    padding: 4px ${gutter} 18px;
+    padding: 5px ${gutter} 18px;
     justify-content: center;
     label {
         font-weight: bold;
@@ -23,19 +23,18 @@ export const Wrapper = styled.div`
         }
     }
     input {
-        padding: 0 ${lateralPadding};
+        padding: 4px ${lateralPadding};
         border-radius: 4px;
         border: 1px solid #757575;
-        height: 32px;
         font-weight: bold;
         font-size: 18px;
         color: #5B5B5B;
-        &:focus, &:valid, &.fill {
+        &:focus, &.fill {
             & + label {
                 padding: 0 ${labelPadding};
                 background: white;
                 font-size: 12px;
-                top: -0.25em;
+                top: -0.1em;
                 transition: all 0.2s;
             }
         }

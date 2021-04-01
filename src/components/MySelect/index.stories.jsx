@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import MySelect from ".";
 
 const containerStyle = {
@@ -33,3 +34,17 @@ export const fetchOptions = () => (
         }} />
     </div>
 );
+
+export const WithState = () => {
+    const [state, setState] = useState(2);
+
+    return (
+        <MySelect value={state} handleChange={({ target: { value }}) => setState(value)} placeholder="nome">
+            <>
+                <span data-value="1">opção 1</span>
+                <span data-value="2">opção 2</span>
+                <span data-value="3">opção 3</span>
+            </>
+        </MySelect>
+    )
+}

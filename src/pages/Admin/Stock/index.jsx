@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import AdminHeader from '../Shared/AdminHeader'
+import AdminHeader from '../shared/AdminHeader'
 import SimpleTextAsButton from '../../../components/SimpleTextAsButton';
 import MyTable from '../../../components/MyTable';
 
@@ -13,7 +13,7 @@ import WithModal from '../../../hocs/withModal';
 
 import { getAllMerchandise } from '../../../actions/merchandiseActions';
 
-const Stock = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, handleCloseModal }) => {
+const Stock = ({ setShowModal, fetchAgain, setModalContent, handleCloseModal }) => {
     const [merchandiseList, setMerchandiseList] = useState();
     const [resultIsFiltered, setResultIsFiltered] = useState(false);
 
@@ -48,9 +48,9 @@ const Stock = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, han
                                     <SimpleTextAsButton onClick={() => setShowModal('incrementMerchandise')} >
                                         + entrada de mercadoria
                                     </SimpleTextAsButton>
-                                    <SimpleTextAsButton onClick={() => setShowModal('searchMerchandise')} >
+                                    {/* <SimpleTextAsButton onClick={() => setShowModal('searchMerchandise')} >
                                         <i className="fas fa-search"></i> Pesquisa
-                                    </SimpleTextAsButton>
+                                    </SimpleTextAsButton> */}
                                 </>
                             )}
                         </div>

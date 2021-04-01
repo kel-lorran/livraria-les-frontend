@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { pageWrapperBase, containerBase } from '../shared/style';
-export * from '../shared/style';
+import { pageWrapperBase, containerBase } from '../../shared/style';
+export * from '../../shared/style';
 
 export const PageWrapper = styled.div`
     ${pageWrapperBase}
@@ -40,4 +40,21 @@ export const SectionOne = styled.section`
     }
 `;
 
-export const SectionTwo = styled.section``;
+export const SectionTwo = styled.section`
+    margin-bottom: 48px;
+    .person-data-description-list {
+        min-height: unset;
+    }
+`;
+
+export const SectionThree = styled.section`
+    text-align: center;
+    .cupom-item {
+        font-weight: bold;
+        margin: 6px -20px;
+        > * {
+            padding: 4px 20px;
+            background: #c4c4c4;
+        }
+    }
+`;

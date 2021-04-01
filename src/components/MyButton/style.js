@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
 
 export const CustomButton = styled.button`
-    height: 45px;
-    padding: 0 18px;
+    padding: 6px 18px;
     font-size: 24px;
     line-height: 28px;
     display: flex;
@@ -21,5 +20,8 @@ export const CustomButton = styled.button`
     }
     &:active {
         opacity: 0.65;
+    }
+    &:disabled {
+        opacity: 0.4;
     }
 `;

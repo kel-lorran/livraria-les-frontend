@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 import MyTable from '../../components/MyTable';
-import ProfileHeader from './ProfileHeader';
+import ProfileHeader from './shared/ProfileHeader';
 
-import * as S from './style';
+import * as S from './shared/style';
 
 import { tableOptionsCard } from './helper';
 import ModalContentHelper from './ModalContentHelper';

@@ -17,9 +17,12 @@ import * as S from './style';
 
 import { getFullProfile } from '../../actions/customerActions';
 import { saveNewOrder } from '../../actions/orderActions';
+import { getCuponsDiscount } from '../../actions/cupomActions';
 
 const Login = ({ history, updateBasket, clearBasket, basket }) => {
     const storeUser = useSelector(store => store.user);
+    const [showLoader, setShowLoader] = useState(false);
+    const [customer, setCustomer] = useState();
     const [addressList, setAddressList] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState();
     const [selectedCard, setSelectedCard] = useState();
@@ -34,9 +37,10 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
 
     useEffect(async () => {
         if(storeUser) {
-            const { address, card } = await getFullProfile().then(r => r.data[0]);
+            const { address, card, ..._customer } = await getFullProfile().then(r => r.data[0]);
             setAddressList(address);
             setCardList(card);
+            setCustomer(_customer);
         }
     }, [storeUser])
 
@@ -44,19 +48,32 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
         setShowModal(false);
     }
 
-    const finishOrder = e => {
-        setOrder({
-            merchandise: basket,
-            address: {
-                delivery: selectedAddress,
-                billing: selectedAddress
-            },
-            card: [selectedCard],
-            cupons,
-            status: 'compra - em aprovação',
-            date: (new Date()).getTime()
-        });
-        setShowModal('aboutOrder');
+    const finishOrder = async e => {
+        try{
+            setShowLoader(true);
+            const discount = await getCuponsDiscount([...cupons]);
+            const subTotal = basket.reduce((ac, m) => ac + (m.quantity * m.price), 0);
+            setOrder({
+                customer,
+                merchandise: basket,
+                subTotal,
+                discount,
+                total: subTotal - discount,
+                address: {
+                    delivery: selectedAddress,
+                    billing: selectedAddress
+                },
+                card: [selectedCard],
+                couponApplied: cupons,
+                status: 'compra - em aprovação',
+                date: (new Date()).getTime()
+            });
+            setShowModal('aboutOrder');
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setShowLoader(false);
+        }
     }
 
     const createOrder = async () => {
@@ -89,7 +106,10 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                                     <div className="table-group">
                                         {!!addressList.length ? (
                                             <div>
-                                                <Link className="manager-profile-item" to='/profile/endereco'>Gerenciar Endereços</Link>
+                                                <div className="instruction-group">
+                                                    <p>Selecione o endereço de entrega</p>
+                                                    <Link to='/profile/endereco'>Gerenciar Endereços</Link>
+                                                </div>
                                                 <MyTable onClick={row => setSelectedAddress(row)} data={addressList} {...tableOptionsAddress} sideLabel={'Endereços'} maxHeight="250px" />
                                             </div>
                                         ) : (
@@ -97,7 +117,10 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                                         )}
                                         {!!cardList.length ? (
                                             <div>
-                                                <Link className="manager-profile-item" to='/profile/cartao'>Gerenciar Cartões</Link>
+                                                <div className="instruction-group">
+                                                    <p>Selecione o cartão desejado</p>
+                                                    <Link to='/profile/cartao'>Gerenciar Cartões</Link>
+                                                </div>
                                                 <MyTable onClick={row => setSelectedCard(row)} data={cardList} {...tableOptionsCard} sideLabel={'Cartões'} maxHeight="250px" />
                                             </div>
                                         ) : (
@@ -109,7 +132,7 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                                         <InputMultiple onChange={({ target: { value } }) => setCupons(value)} placeholder="+ cupon" />
                                     </div>
                                     <div className="main-action">
-                                        <MyButton type="button" onClick={finishOrder}>Finalizar Compra</MyButton>
+                                        <MyButton type="button" title={!(selectedAddress && selectedCard) ? 'escolha um cartão e endereço para continuar' : ''} disabled={!(selectedAddress && selectedCard)} onClick={finishOrder}>Finalizar Compra</MyButton>
                                     </div>
                                 </>
                             ) || null : basket.length && (
@@ -123,8 +146,9 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                 </S.SectionTwo>
             </main>
             <MyModal show={showModal} handleClose={handleCloseModal}>
-                <ModalContentHelper type={showModal} handleClose={handleCloseModal} handleSubmit={createOrder} order={order} addressList={addressList} />
+                <ModalContentHelper type={showModal} handleClose={handleCloseModal} handleSubmit={createOrder} order={order} addressList={addressList} setOrder={setOrder} />
             </MyModal>
+            {showLoader && <Loader />}
         </S.PageWrapper>
     )
 }

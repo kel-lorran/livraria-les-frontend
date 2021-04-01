@@ -15,13 +15,18 @@ export const PageWrapper = styled.div`
             margin-bottom: 56px;
         }
     }
-    .manager-profile-item {
-        display: block;
+    .instruction-group {
         font-size: 18px;
         font-weight: bold;
-        color: inherit;
-        &:not(.add-to-continue) {
-            margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        > a {
+            display: block;
+            color: inherit;
+            &:not(.add-to-continue) {
+                margin-bottom: 24px;
+            }
         }
     }
 `;

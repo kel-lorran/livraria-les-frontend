@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 
 import SimpleTextAsButton from '../../../components/SimpleTextAsButton';
 import MyModal from '../../../components/MyModal';
-import AdminHeader from '../Shared/AdminHeader';
+import AdminHeader from '../shared/AdminHeader';
 
 import * as S from './style';
 
 import { FormHelper } from './formHelper';
 import { TableHelper } from './tableHelper';
 
-import { getAllAddressByIdOrIds, getAllAddress } from '../../../actions/addressActions';
+import { getAllAddressByCustomerId, getAllAddress } from '../../../actions/addressActions';
 
 const Address = () => {
     const [showModal, setShowModal] = useState(false);
@@ -24,11 +24,11 @@ const Address = () => {
     }
 
     useEffect(async () => {
-        const customerIds = window.location.search.match(/(?<=customerid\=)[\d|,]+/gi)?.[0];
+        const customerId = window.location.search.match(/(?<=customerid\=)[\d|,]+/gi)?.[0];
         try {
             let _addressList;
-            if (customerIds)
-                _addressList = await getAllAddressByIdOrIds(customerIds.split(',')).then(r => r.map(a => a.data));
+            if (customerId)
+                _addressList = await getAllAddressByCustomerId(customerId).then(r => r.data);
             else
                 _addressList = await getAllAddress().then(r => r.data);
             setAdressList(_addressList);

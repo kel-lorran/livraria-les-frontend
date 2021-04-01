@@ -20,7 +20,7 @@ const Signin = ({ location: { search }, updateProfile, history }) => {
 
     const createCustomerSubmit = async data => {
         if(dataToSend) {
-            await saveNewCustomer({ ...dataToSend, active: 1}, [{...data, addressType: "cobranca", addressLabel: `${data.addressLabel} cobrança` }, {...data, addressType: "entrega", addressLabel: `${data.addressLabel} entrega` }] );
+            await await saveNewCustomer({ ...dataToSend, active: 1}, [data] );
             
             const isLogged = await login(dataToSend.email, dataToSend.password).then(r => !!r.data.length);
             updateProfile({ status: isLogged, email: dataToSend.email });

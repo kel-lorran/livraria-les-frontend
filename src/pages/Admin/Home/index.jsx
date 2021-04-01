@@ -1,4 +1,4 @@
-import AdminHeader from '../Shared/AdminHeader'
+import AdminHeader from '../shared/AdminHeader'
 import * as S from './style';
 
 import grafico1 from '../../../assets/image 1.jpg';

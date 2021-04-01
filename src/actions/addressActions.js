@@ -9,6 +9,10 @@ export const getAllAddressByIdOrIds = async (ids = []) => {
         return Promise.all( ids.map(id =>genericGet(`/address/${id}`)));
 }
 
+export const getAllAddressByCustomerId = id => {
+     return genericGet(`/address/?customerId=${id}`);
+}
+
 export const getAllAddress = () => {
     return genericGet('/address');
 }

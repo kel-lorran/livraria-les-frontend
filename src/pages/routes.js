@@ -29,6 +29,7 @@ import Cart from './Cart';
 import Profile from './Profile';
 import ProfileAddress from './Profile/address';
 import ProfileCard from './Profile/card';
+import ProfileOrders from './Profile/Orders';
 
 import { PROFILE_CUSTOMER_DATA } from '../utils/data/constants';
 
@@ -117,6 +118,7 @@ export default function() {
                 <PrivateRoute exact path="/profile" isLogged={isLogged} component={() => <Profile />} />
                 <PrivateRoute exact path="/profile/endereco" isLogged={isLogged} component={() => <ProfileAddress />} />
                 <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={() => <ProfileCard />} />
+                <PrivateRoute exact path="/profile/meus-pedidos" isLogged={isLogged} component={() => <ProfileOrders />} />
 
                 <PrivateRoute exact path="/admin" isLogged={isLogged} component={() => <Dashboard />} />
                 <PrivateRoute path="/admin/livros" isLogged={isLogged} component={() => <Books />} />

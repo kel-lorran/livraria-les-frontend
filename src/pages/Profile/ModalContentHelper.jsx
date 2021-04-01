@@ -4,7 +4,7 @@ import CustomForm from '../../components/CustomForm';
 import MyButton from '../../components/MyButton';
 import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 
-import * as S from './style';
+import * as S from './shared/style';
 
 import { inputMap, inputMapCard } from './helper';
 

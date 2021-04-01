@@ -50,15 +50,20 @@ export const Wrapper = styled.div`
         border-radius: 0 0 4px 4px;
         max-height: 170px;
         overflow-y: auto;
-        &:hover {
-            display: flex;
-        }
         > * {
             padding: 4px 0;
             & + * {
                 border-top: 1px solid #6d6d6d61;
             }
         }
+        &:active {
+            display: flex;
+        }
+        ${props => props.multiple ? `
+            &:hover {
+                display: flex;
+            }    
+        ` : ''}
     }
     input {
         padding: 0 ${lateralPadding};

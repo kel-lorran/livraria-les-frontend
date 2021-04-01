@@ -2,28 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import ProfileHeader from './ProfileHeader';
+import ProfileHeader from './shared/ProfileHeader';
 import Loader from '../../components/Loader';
-import MyModal from '../../components/MyModal';
-
-import * as S from './style.js';
-
-import { inputMap } from './helper';
-import ModalContentHelper from './ModalContentHelper';
-
-import { getFullProfile } from '../../actions/customerActions';
 import MyButton from '../../components/MyButton';
 
-const Profile = ({ history }) => {
-    const storeUser = useSelector(store => store.user);
-    const [showModal, setShowModal] = useState(false);
-    const [fetchAgain, setFetchAgain] = useState(false);
-    const [customer, setCustomer] = useState();
+import * as S from './shared/style.js';
 
-    const handleCloseModal = (shouldUpdate) => {
-        setShowModal(false);
-        if(shouldUpdate) setFetchAgain(!fetchAgain);
-    }
+import { inputMapPersonData } from './helper';
+import ModalContentHelper from './ModalContentHelper';
+
+import WithModal from '../../hocs/withModal';
+
+import { getFullProfile } from '../../actions/customerActions';
+import { getAllCupons } from '../../actions/cupomActions';
+
+
+const Profile = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, handleCloseModal, isAdminPage }) => {
+    const storeUser = useSelector(store => store.user);
+    const [customer, setCustomer] = useState();
+    const [cupons, setCupons] = useState([]);
 
     useEffect(async () => {
         if(storeUser) {
@@ -32,11 +29,20 @@ const Profile = ({ history }) => {
         }
     }, [storeUser, fetchAgain])
 
+    useEffect(async () => {
+        if(storeUser) {
+            const _cupons = await getAllCupons().then(r => r.data);
+            setCupons(_cupons)
+        }
+    }, [storeUser, fetchAgain])
+
     const createDescriptionsList = (defaultHelper, item) => {
         return defaultHelper.map(step => step.reduce((ac, inp) => {
             return [...ac, <React.Fragment key={'dt' + inp.name}><dt>{inp.label || inp.placeholder}</dt><dd>{item[inp.name]}</dd><br /></React.Fragment>]
         }, []))
     }
+
+    useEffect(() => setModalContent(props => props => <ModalContentHelper {...props} />), []);
 
     return customer ? (
         <S.PageWrapper>
@@ -53,18 +59,29 @@ const Profile = ({ history }) => {
                 <S.SectionTwo>
                     <S.Container>
                         <div>
-                            <S.WrapperDescriptionList>{createDescriptionsList([inputMap[0]], customer)}</S.WrapperDescriptionList>
+                            <S.WrapperDescriptionList className="person-data-description-list">{createDescriptionsList([inputMapPersonData], customer)}</S.WrapperDescriptionList>
                         </div>
                     </S.Container>
                 </S.SectionTwo>
+                {!!cupons.length && <S.SectionThree>
+                    <S.Container>
+                        <div>
+                            <h3>Meu Cupons</h3>
+                            {cupons.map(({ code, value, status }) => (
+                                <p className="cupom-item" key={code}>
+                                    <span className="code">{code}</span>
+                                    <span className="value">R${value}</span>
+                                    <span className="status">{status}</span>
+                                </p>
+                            ))}
+                        </div>
+                    </S.Container>
+                </S.SectionThree>}
             </main>
-            <MyModal show={showModal} handleClose={handleCloseModal}>
-                <ModalContentHelper type={showModal} handleClose={handleCloseModal} itemSelected={customer} />
-            </MyModal>
         </S.PageWrapper>
     ) : (
         <Loader />
     )
 }
 
-export default Profile;
+export default WithModal(Profile);

@@ -5,7 +5,7 @@ import { saveNewCustomer, updateCustomer, searchCustomers } from '../../../actio
 import { updateAddress, saveNewAddress, deleteAddress } from '../../../actions/addressActions';
 
 import * as S from './style';
-import { inputMap, inputMapToInativation, inputMapToAtivation, inputMapToShowStatus } from './helper';
+import { inputMap, inputMapToInativation, inputMapToAtivation, inputMapToShowStatus, inputMapPersonData } from './helper';
 import MyButton from '../../../components/MyButton';
 import { Link } from 'react-router-dom';
 import SimpleTextAsButton from '../../../components/SimpleTextAsButton';
@@ -119,7 +119,7 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
                             <MyButton onClick={() => setShowModal('activeCustomer')}>Ativar</MyButton>
                         )}
                     </S.ModalHeader>
-                    <S.WrapperDescriptionList>{createDescriptionsList([...inputMapToShowStatus, inputMap[0]], itemSelected)}</S.WrapperDescriptionList>
+                    <S.WrapperDescriptionList>{createDescriptionsList([...inputMapToShowStatus, inputMapPersonData], itemSelected)}</S.WrapperDescriptionList>
                     <Link to={`/admin/clientes/endereco?customerid=${itemSelected.id}`}>Lista de endereços</Link>
                 </>
             )

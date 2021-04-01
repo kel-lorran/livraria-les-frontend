@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import MyButton from '../../components/MyButton';
 import MySelect from '../../components/MySelect';
 
+import { abbreviateText } from '../../utils'
+
 import * as S from './style';
 import { tableOptionsProducts, tableOptionsAddress, tableOptionsCard } from './helper';
 
-export default ({ type, handleSubmit, handleClose, order, addressList }) => {
+export default ({ type, handleSubmit, handleClose, order, addressList, setOrder }) => {
+    const [billingAddress, setBillingAddress] = useState();
     const productsListDescriptionHelper = tableOptionsProducts.showElements;
     const addressListDescriptionHelper = tableOptionsAddress.showElements;
     const cardListDescriptionHelper = tableOptionsCard.showElements;
@@ -16,6 +19,16 @@ export default ({ type, handleSubmit, handleClose, order, addressList }) => {
             return [...ac, <React.Fragment key={'dt' + inp.key}><dt>{inp.title}</dt><dd>{item[inp.key]}</dd><br /></React.Fragment>]
         }, [])
     }
+
+    const changeAddress = ({ target: { value }}) => {
+        value && setBillingAddress(addressList.filter(({id}) => value == id)[0])
+         setOrder({ ...order, address: { delivery: order.address.delivery, billing: addressList.filter(({id}) => value == id)[0]} })
+    }
+
+    useEffect(
+        () => billingAddress && setOrder({ ...order, address: { delivery: order.address.delivery, billing: billingAddress} }),
+        [billingAddress]
+    )
 
     switch (type) {
         case 'aboutOrder':
@@ -28,17 +41,20 @@ export default ({ type, handleSubmit, handleClose, order, addressList }) => {
                         {createDescriptionsList(addressListDescriptionHelper, order.address.delivery)}
                         <h4>Cartões</h4>
                         {order.card.map(m => createDescriptionsList(cardListDescriptionHelper, m))}
-                        {!!order.cupons.length && <h4>Cupons</h4>}
-                        {order.cupons.map(c => <span key={c}>{c + '  '}</span>)}
+                        {!!order.couponApplied.length && <h4>Cupons</h4>}
+                        {order.couponApplied.map(c => <span key={c}>{c + '  '}</span>)}
+                        {order?.subTotal && <h5>Subtotal: {order.subTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</h5>}
+                        {!!order?.discount && <h5>Desconto: {(order.discount * -1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</h5>}
+                        {order && <h4>Total: {order.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</h4>}
                     </S.WrapperDescriptionList>
                     <S.ModalFooter>
                         <S.BillingAdrressWrapper>
-                            <MySelect className="select-billing-address" handleChange={e => {debugger}} placeholder="usar endereço de entrega para cobrança">
+                            <MySelect className="select-billing-address" handleChange={changeAddress} placeholder="usar endereço de entrega para cobrança" value={billingAddress?.id}>
                                 <>
                                     <span data-value="">usar endereço de entrega para cobrança</span>
                                     {addressList.map(({ addressLabel, publicPlaceType, publicPlaceName, id }) => {
-                                        const text = `${addressLabel} - ${publicPlaceType} ${publicPlaceName}`;
-                                        return <span data-value={id} key={id}>{text}</span>
+                                        const text = `usar ${abbreviateText(addressLabel, 12)} - ${abbreviateText(`${publicPlaceType} ${publicPlaceName}`, 12)} para cobrança`;
+                                        return <span title={`usar ${addressLabel} - ${publicPlaceType} ${publicPlaceName} para cobrança`} data-value={id} key={id}>{text}</span>
                                     })}
                                 </>
                             </MySelect>

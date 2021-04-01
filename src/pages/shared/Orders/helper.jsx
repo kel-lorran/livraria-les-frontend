@@ -109,10 +109,37 @@ export const inputMapToUpdateStatus = [
             placeholder: 'Novo status',
             required: true,
             options: [
-                { value: 'inicial', text: 'Compra em análise'},
-                { value: 'aprovada', text: 'Compra aprovada'},
-                { value: 'recusada', text: 'Compra recusada'}
+                { value: 'em processamento', text: 'Em processamento'},
+                { value: 'recusada', text: 'Compra recusada'},
+                { value: 'entregue', text: 'Entregue'},
+                { value: 'em troca', text: 'Em troca'},
+                // { value: 'troca autorizada', text: 'Troca autorizada'},
+                { value: 'troca recusada', text: 'Troca recusada'},
+                { value: 'troca autorizada', text: 'Troca autorizada'},
+                { value: 'mercadoria devolvida', text: 'Mercadoria devolvida'},
+                { value: 'concluida', text: 'Pedido concluido'},
+                { value: 'finalizada', text: 'Finalizado - garantia expirada'}
             ]
         },
+    ]
+]
+
+export const inputMapToSearchOrder = [
+    [
+        {
+            componentName: 'MyInput',
+            name: 'id',
+            required: false,
+            type: 'number',
+            max: 9999,
+            label: 'ID do pedido'
+        },
+        {
+            componentName: 'MyInput',
+            name: 'date',
+            required: false,
+            label: 'data de criação'
+        },
+        { ...inputMapToUpdateStatus[0][0], required: false }
     ]
 ]

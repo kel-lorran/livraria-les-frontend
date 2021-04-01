@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as S from './style';
 
-const MySelect = ({ value = '', name = Math.random().toString(), label, placeholder, required, handleChange, children, halfSize, errorMessage = "verificar preenchimento", ...props }) => {
+const MySelect = ({ value = '', name = Math.random().toString(), label, placeholder, required, handleChange = () => null, children, halfSize, errorMessage = "verificar preenchimento", ...props }) => {
     const [displayText, setDisplayText] = useState(value)
     const options = useRef(null);
     const id = `id_inp_${name}`;
@@ -14,7 +14,7 @@ const MySelect = ({ value = '', name = Math.random().toString(), label, placehol
         const _options = options?.current?.children;
         let result;
         if(_options && value)
-            result = [..._options].find(o => o.dataset.value === value || o.textContent === value)?.textContent || '';
+            result = [..._options].find(o => o.dataset.value == value || o.textContent == value)?.textContent || '';
         else
             result = '';
         setDisplayText(result);

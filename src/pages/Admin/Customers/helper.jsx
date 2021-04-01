@@ -155,6 +155,8 @@ export const inputMap = [
     ]
 ]
 
+export const inputMapPersonData = inputMap[0].filter(({ name }) => !['password', 'passwordRedundancy'].includes(name));
+
 export const inputMapToInativation = [
     [
         {   
