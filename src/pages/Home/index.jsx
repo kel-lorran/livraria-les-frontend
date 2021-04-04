@@ -33,7 +33,7 @@ const Home = () => {
                                         cover="https://via.placeholder.com/400x600.jpg?text=Capa+Livro"
                                         callToAction={<Link to={`/livro/${b.id}`}>COMPRAR</Link>}
                                     >
-                                        Cronicas de Narnia com um texto incrementado para adicionar tamanho
+                                        {b.title}
                                     </MyCard>
                                 )
                             })}
