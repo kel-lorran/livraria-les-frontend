@@ -65,7 +65,7 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                 },
                 card: [selectedCard],
                 couponApplied: cupons,
-                status: 'compra - em aprovação',
+                status: 'em processamento',
                 date: (new Date()).getTime()
             });
             setShowModal('aboutOrder');
