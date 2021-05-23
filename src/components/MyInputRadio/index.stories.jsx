@@ -14,7 +14,7 @@ export default {
 const personTypeOptions = [
     {
         text: 'Fisica',
-        value: 'CPF'
+        value: 'cpf'
     },
     {
         text: 'Juridica',

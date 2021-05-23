@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { phoneMask } from '../../utils';
 import MyInput from ".";
 
 const containerStyle = {
@@ -28,6 +29,15 @@ export const ControledComponent = () => {
     return (
         <div style={containerStyle}>
             <MyInput value={val} handleChange={e => setVal(e.target.value)} label="nome" required halfSize />
+        </div>
+    );
+}
+
+export const WithMask = () => {
+    const [val, setVal] = useState("");
+    return (
+        <div style={containerStyle}>
+            <MyInput label="nome" handleChange={e => setVal(e.target.value)} value={val} mask={phoneMask} required />
         </div>
     );
 }

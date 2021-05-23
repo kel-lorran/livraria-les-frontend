@@ -34,6 +34,17 @@ export const Wrapper = styled.header`
             justify-content: center;
         }
     }
+    .fa-shopping-cart{
+        position: relative;
+        margin-left: 0.4em;
+        margin-right: 0.4em;
+        > span {
+            position: absolute;
+            top: 70%;
+            font-size: 0.6em;
+            left: 100%;
+        }
+    }
 `;
 
 export const Container = styled.div`

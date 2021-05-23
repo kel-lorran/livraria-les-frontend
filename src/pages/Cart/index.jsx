@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {  useSelector } from 'react-redux';
+import {  useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import MyHeader from '../../components/MyHeader';
@@ -16,30 +16,58 @@ import { tableOptionsProducts, tableOptionsAddress, tableOptionsCard } from './h
 import * as S from './style';
 
 import { getFullProfile } from '../../actions/customerActions';
-import { saveNewOrder } from '../../actions/orderActions';
-import { getCuponsDiscount } from '../../actions/cupomActions';
+import { getOrderById, updateDraftOrder, saveNewOrder, commitOrder } from '../../actions/orderActions';
 
-const Login = ({ history, updateBasket, clearBasket, basket }) => {
+import { setOrder, clearOrder } from '../../store/order';
+
+import { updateMerchandiseList } from '../../utils';
+
+import { useQuantityControlFetch } from '../../hooks/useQuantityControlFetch';
+
+const Cart = ({ history }) => {
+    const dispatch =  useDispatch();
     const storeUser = useSelector(store => store.user);
+    const storeOrder = useSelector(store => store.order);
+
     const [showLoader, setShowLoader] = useState(false);
+
     const [customer, setCustomer] = useState();
     const [addressList, setAddressList] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState();
-    const [selectedCard, setSelectedCard] = useState();
-    const [cupons, setCupons] = useState([]);
+    const [selectedCard, setSelectedCard] = useState([]);
+    const [selectedCoupons, setSelectedCoupons] = useState([]);
     const [cardList, setCardList] = useState([]);
+    const quantityControlFetch = useQuantityControlFetch()[2];
+    
     const [showModal, setShowModal] = useState(false);
-    const [order, setOrder] = useState({});
-    const quantityControl = (increment, idBook) => updateBasket({ id: idBook, quantity: increment });
+
+    const quantityControl = (increment, bookId) => {
+        const newOrder = { ...storeOrder, merchandiseList: updateMerchandiseList({ bookId, quantity: increment, order: storeOrder }) };
+        quantityControlFetch(() => () => {
+            updateDraftOrder(newOrder).then(r => {
+                dispatch(setOrder({ ...storeOrder, merchandiseList: r.data.data.merchandiseList }));
+            }).catch(e => {
+                getOrderById(storeOrder.id).then(r => dispatch(setOrder(r.data)))
+                window.alert("Quantidade dessa mercadoria excedeu nosso estoque, voce pode tentar novamente com um valor menor");
+            })
+        });
+        dispatch(setOrder(newOrder));
+    };
     const buildData = (rawData, quantityControl) => {
         return rawData.map(({ book, ...rest }) => ({ ...rest, ...book, quantityControl}));
     }
 
     useEffect(async () => {
-        if(storeUser) {
-            const { address, card, ..._customer } = await getFullProfile().then(r => r.data[0]);
-            setAddressList(address);
-            setCardList(card);
+        if(storeOrder?.status === 'pré-visualização') {
+            setShowModal('aboutOrder');
+        }
+    }, [storeOrder]);
+
+    useEffect(async () => {
+        if(storeUser.token) {
+            const { addressList, creditCardList, ..._customer } = await getFullProfile().then(r => r.data);
+            setAddressList(addressList);
+            setCardList(creditCardList);
             setCustomer(_customer);
         }
     }, [storeUser])
@@ -48,40 +76,47 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
         setShowModal(false);
     }
 
-    const finishOrder = async e => {
+    const manageSelectedCards = (card) => {
+        const newSet = new Set(selectedCard);
+        if(newSet.delete(card)) return setSelectedCard([...newSet])
+        if(selectedCard.size === 2) {
+            const [, ...rest] = selectedCard
+            setSelectedCard([...rest, card])
+        } else {
+            setSelectedCard([...selectedCard, card])
+        }
+    }
+
+    const createPreviewOrder = async e => {
         try{
             setShowLoader(true);
-            const discount = await getCuponsDiscount([...cupons]);
-            const subTotal = basket.reduce((ac, m) => ac + (m.quantity * m.price), 0);
-            setOrder({
-                customer,
-                merchandise: basket,
-                subTotal,
-                discount,
-                total: subTotal - discount,
-                address: {
-                    delivery: selectedAddress,
-                    billing: selectedAddress
-                },
-                card: [selectedCard],
-                couponApplied: cupons,
-                status: 'em processamento',
-                date: (new Date()).getTime()
-            });
-            setShowModal('aboutOrder');
+            const orderFromBack = await saveNewOrder({
+                ...storeOrder,
+                customerId: customer.id,
+                deliveryAddress: selectedAddress,
+                billingAddress: selectedAddress,
+                creditCardList: selectedCard,
+                couponAppliedList: selectedCoupons
+            }).then(r => r.data.data);
+            dispatch(setOrder(orderFromBack))
         } catch (error) {
+            window.alert("Falha na criação da pré-visualização do pedido de compra");
             console.log(error);
         } finally {
             setShowLoader(false);
         }
     }
 
-    const createOrder = async () => {
-        await saveNewOrder(order);
-        window.alert('sucesso no envio, pedido em analise!');
-        setShowModal('false');
-        clearBasket();
-        history.push('/');
+    const finishOrder = async () => {
+        try {
+            await commitOrder(storeOrder);
+            window.alert('sucesso no envio, pedido em analise!');
+            setShowModal('false');
+            dispatch(clearOrder());
+            history.push('/');
+        } catch (error) {
+            window.alert('falha na confirmação do pedido de compra');
+        }
     }
  
     return ( 
@@ -93,7 +128,7 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                         <div>
                             <Link className="link-continue-action" to="/"><SimpleTextAsButton>Continuar comprando...</SimpleTextAsButton></Link>
                             <div className="table-group">
-                                <MyTable data={buildData(basket, quantityControl)} {...tableOptionsProducts} sideLabel={'Produtos'} maxHeight="250px" />
+                                <MyTable data={buildData(storeOrder.merchandiseList, quantityControl)} {...tableOptionsProducts} sideLabel={'Produtos'} maxHeight="250px" />
                             </div>
                         </div>
                     </S.Container>
@@ -101,7 +136,7 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                 <S.SectionTwo>
                     <S.Container>
                         <div>
-                            {storeUser ?  basket.length && (
+                            {storeUser.token ?  storeOrder.merchandiseList.length && (
                                 <>
                                     <div className="table-group">
                                         {!!addressList.length ? (
@@ -121,7 +156,7 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                                                     <p>Selecione o cartão desejado</p>
                                                     <Link to='/profile/cartao'>Gerenciar Cartões</Link>
                                                 </div>
-                                                <MyTable onClick={row => setSelectedCard(row)} data={cardList} {...tableOptionsCard} sideLabel={'Cartões'} maxHeight="250px" />
+                                                <MyTable onClick={manageSelectedCards} data={cardList} {...tableOptionsCard} sideLabel={'Cartões'} maxHeight="250px" />
                                             </div>
                                         ) : (
                                             <Link className="manager-profile-item add-to-continue" to='/profile/cartao'>Adicionar cartão para continuar...</Link>
@@ -129,13 +164,13 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                                     </div>
                                     <div className="cupon-group">
                                         <h3>CUPONS - caso possua adicione abaixo</h3>
-                                        <InputMultiple onChange={({ target: { value } }) => setCupons(value)} placeholder="+ cupon" />
+                                        <InputMultiple onChange={({ target: { value } }) => setSelectedCoupons(value)} placeholder="+ cupon" />
                                     </div>
                                     <div className="main-action">
-                                        <MyButton type="button" title={!(selectedAddress && selectedCard) ? 'escolha um cartão e endereço para continuar' : ''} disabled={!(selectedAddress && selectedCard)} onClick={finishOrder}>Finalizar Compra</MyButton>
+                                        <MyButton type="button" title={!(selectedAddress && selectedCard) ? 'escolha um cartão e endereço para continuar' : ''} disabled={!(selectedAddress && selectedCard)} onClick={createPreviewOrder}>Finalizar Compra</MyButton>
                                     </div>
                                 </>
-                            ) || null : basket.length && (
+                            ) || null : storeOrder.merchandiseList.length && (
                                 <Link className="link-continue-action" to={{
                                     pathname: '/login',
                                     search: '?redirectUrl=/cesta-produtos'
@@ -146,11 +181,11 @@ const Login = ({ history, updateBasket, clearBasket, basket }) => {
                 </S.SectionTwo>
             </main>
             <MyModal show={showModal} handleClose={handleCloseModal}>
-                <ModalContentHelper type={showModal} handleClose={handleCloseModal} handleSubmit={createOrder} order={order} addressList={addressList} setOrder={setOrder} />
+                <ModalContentHelper type={showModal} handleClose={handleCloseModal} handleSubmit={finishOrder} order={storeOrder} addressList={addressList} setOrder={newValue => dispatch(setOrder(newValue))} />
             </MyModal>
             {showLoader && <Loader />}
         </S.PageWrapper>
     )
 }
 
-export default Login;
+export default Cart;

@@ -7,8 +7,7 @@ import * as S from './style';
 
 import { tableOptionsProducts, tableOptionsAddress, tableOptionsCard, inputMapToSearchOrder, inputMapToUpdateStatus } from './helper';
 
-import { updateOrder, searchOrders, exchangeMerchandiseReceived } from '../../../actions/orderActions';
-import { generateCupom } from '../../../actions/cupomActions';
+import { updateOrderStatus, searchOrders, updateOrderExchangeMerchandise } from '../../../actions/orderActions';
 
 export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsFiltered, isAdminPage }) => {
     const productsListDescriptionHelper = tableOptionsProducts.showElements;
@@ -16,13 +15,12 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsF
     const cardListDescriptionHelper = tableOptionsCard.showElements;
 
     const updateStatusOrdersSubmit = async data => {
-        await updateOrder({ ...itemSelected, ...data });
-
-        if(data?.status === 'mercadoria devolvida') {
-            await exchangeMerchandiseReceived(itemSelected.id);
-            await generateCupom(itemSelected.id);
+        if(data.status !== 'mercadoria devolvida') {
+            await updateOrderStatus({ orderId: itemSelected.id, status: data.status });
+            handleClose(true);
+        } else {
+            setShowModal('returnMerchandiseStock');
         }
-        handleClose(true);
     }
 
     const searchOrderSubmit = async data => {
@@ -55,17 +53,20 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsF
                     ...ac, [id]: { ...ac[id], quantity: ac[id].quantity + 1 }
                 }
                 return {
-                    ...ac, [id]: { ...itemSelected.merchandise.find(m => m.id == id), quantity: 1, status: 'nao processada' }
+                    ...ac, [id]: { ...itemSelected.merchandiseList.find(m => m.id == id), quantity: 1, status: 'nao processada' }
                 }
             }, {})
-            await updateOrder({ ...itemSelected, exchangedMerchandise: Object.values(exchangedMerchandise), status: 'em troca' });
+            await updateOrderExchangeMerchandise({ orderId: itemSelected.id, exchangedMerchandise: Object.values(exchangedMerchandise) });
             handleClose(true);
         }
     }
 
-    const approveExchangeSubmit = () => {
-        const exchangedMerchandiseUpdated = itemSelected.exchangedMerchandise.map(m => ({ ...m, status: m.status === 'nao processada' ? 'aprovada - aguardando recebimento' : m.status }))
-        updateStatusOrdersSubmit({ status: 'troca autorizada', exchangedMerchandise: exchangedMerchandiseUpdated })
+    const approveExchangeSubmit = async () => {
+        try {
+            await updateStatusOrdersSubmit({ status: 'troca autorizada' })
+        } catch (error) {
+            window.alert("Falha na autorização")
+        }
     }
 
     const createDescriptionsList = (helper, item) => {
@@ -74,10 +75,19 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsF
         }, [])
     }
 
+    const returnMerchandiseStockSubmit = async (flag) => {
+        try {
+            await updateOrderStatus({ orderId: itemSelected.id, status: 'mercadoria devolvida', returnStock: flag });
+            handleClose(true);
+        } catch (err) {
+            window.alert("Falha na atualização de status do pedido")
+        }
+    }
+
     const disableRequiredAttribute = helper => helper.map(step => step.map(e =>  ({ ...e, required: false })));
 
     const makeListWithCheckBox = order => {
-        const preparedToList = order.merchandise
+        const preparedToList = order.merchandiseList
             .reduce((ac, { quantity, ...m }) => [...ac, ...Array(+quantity).fill(m)], []);
         return preparedToList.map((m) => {
             const key = Math.random().toFixed(2);
@@ -109,13 +119,13 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsF
                             </div>
                         )}
                         <h4>Produtos</h4>
-                        {itemSelected.merchandise.map(({ book, ...rest }) => createDescriptionsList(productsListDescriptionHelper, { ...book, ...rest }))}
+                        {itemSelected.merchandiseList.map(({ book, ...rest }) => createDescriptionsList(productsListDescriptionHelper, { ...book, ...rest }))}
                         <h4>Endereço de entrega</h4>
-                        {createDescriptionsList(addressListDescriptionHelper, itemSelected.address.delivery)}
+                        {createDescriptionsList(addressListDescriptionHelper, itemSelected.deliveryAddress)}
                         <h4>Cartões</h4>
-                        {itemSelected.card.map(m => createDescriptionsList(cardListDescriptionHelper, m))}
-                        {!!itemSelected.couponApplied.length && <h4>Cupons</h4>}
-                        {itemSelected.couponApplied.map(c => <span key={c}>{c + '  '}</span>)}
+                        {itemSelected.creditCardList.map(m => createDescriptionsList(cardListDescriptionHelper, m))}
+                        {!!itemSelected.couponAppliedList.length && <h4>Cupons</h4>}
+                        {itemSelected.couponAppliedList.map(c => <span key={c.code}>{c.code + '  '}</span>)}
                         {itemSelected && <h4>Total: {itemSelected.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</h4>}
                     </S.WrapperDescriptionList>
                 </>
@@ -155,6 +165,20 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsF
                             <MyButton type="submit">Confirmar</MyButton>
                         </S.ModalFooter>
                     </form>
+                </>
+            )
+        
+        case 'returnMerchandiseStock':
+            return (
+                <>
+                    <S.ModalHeader>
+                        <h3>Retornar produtos para estoque?</h3>
+                        <p>todas as mercadorias desse pedido de troca serão acrescidas aos respectivos estoques.</p>
+                    </S.ModalHeader>
+                    <S.ModalFooter>
+                        <MyButton onClick={() => returnMerchandiseStockSubmit(false)}>Não</MyButton>
+                        <MyButton onClick={() => returnMerchandiseStockSubmit(true)}>Sim</MyButton>
+                    </S.ModalFooter>
                 </>
             )
         

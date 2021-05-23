@@ -7,7 +7,7 @@ import Loader from '../../components/Loader';
 
 import * as S from './style';
 
-import { login, } from '../../actions/userActions';
+import { login } from '../../actions/userActions';
 import MyInput from '../../components/MyInput';
 import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 
@@ -20,14 +20,16 @@ const Login = ({ location: { search }, updateProfile, history }) => {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const isLogged = await login(email, password).then(r => !!r.data.length);
+        try{
+            const result = await login({ email, password }).then(r => r.data);
 
-        if(isLogged) {
-            updateProfile({ status: isLogged, email });
-            window.alert('Sucesso na autenticação')
-
-            history.replace(redirectUrl || '/');
-        } else {
+            if(result.token) {
+                updateProfile({ status: !!result.token, email, token: result.token });
+                // window.alert('Sucesso na autenticação')
+    
+                history.replace(redirectUrl || '/');
+            }
+        } catch (error) {
             window.alert('Falha na autenticação, verifique o preenchimento e tente novamente.')
         }
     }

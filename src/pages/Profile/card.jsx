@@ -14,11 +14,11 @@ import WithModal from '../../hocs/withModal';
 import { getFullProfile } from '../../actions/customerActions';
 
 const Card = ({ setShowModal, fetchAgain, setModalContent, setItemSelected }) => {
-    const [customer, setCustomer] = useState();
+    const [customer, setCustomer] = useState({});
 
     useEffect(async () => {
         try {
-            const _customer = await getFullProfile().then(r => r.data[0]);
+            const _customer = await getFullProfile().then(r => r.data);
             setCustomer(_customer);
         } catch (error) {
             window.alert("Falha na obtenção da lista de cartões");
@@ -43,7 +43,7 @@ const Card = ({ setShowModal, fetchAgain, setModalContent, setItemSelected }) =>
                             </SimpleTextAsButton>
                         </div>
                         <div className="table-group">
-                            {customer?.card && <MyTable data={customer.card} onClick={item => {setItemSelected(item); setShowModal('aboutCard')}} {...tableOptionsCard} maxHeight="150px" />}
+                            {!!customer.creditCardList?.length && <MyTable data={customer.creditCardList} onClick={item => {setItemSelected(item); setShowModal('aboutCard')}} {...tableOptionsCard} maxHeight="150px" />}
                         </div>
                     </div>
                 </S.Container>

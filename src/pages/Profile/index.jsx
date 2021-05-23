@@ -23,14 +23,15 @@ const Profile = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, h
     const [cupons, setCupons] = useState([]);
 
     useEffect(async () => {
-        if(storeUser) {
-            const _customer = await getFullProfile().then(r => r.data[0]);
+        if(storeUser.token) {
+            const _customer = await getFullProfile().then(r => r.data);
             setCustomer(_customer);
+            setItemSelected(_customer);
         }
     }, [storeUser, fetchAgain])
 
     useEffect(async () => {
-        if(storeUser) {
+        if(storeUser.token) {
             const _cupons = await getAllCupons().then(r => r.data);
             setCupons(_cupons)
         }

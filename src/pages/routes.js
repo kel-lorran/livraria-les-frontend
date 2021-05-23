@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setUser } from '../store/user';
@@ -31,55 +31,68 @@ import ProfileAddress from './Profile/address';
 import ProfileCard from './Profile/card';
 import ProfileOrders from './Profile/Orders';
 
-import { PROFILE_CUSTOMER_DATA } from '../utils/data/constants';
+import Loader from '../components/Loader';
+
+import { PROFILE_CUSTOMER_DATA, TIMER_EXPIRE_CART_KEY, TIMER_EXPIRE_CART_INITIAL } from '../utils/data/constants';
+
+import { fetchOrder } from '../store/order';
+
+import { useQuantityControlFetch } from '../hooks/useQuantityControlFetch';
 
 const PrivateRoute = ({ component: Component, isLogged, ...rest }) => {
+    const componentComputed = useCallback(props => {
+        switch (isLogged) {
+            case true:
+                return <Component {...props} />;
+            case false:
+                return <Redirect to={{ pathname: '/login', search: `?redirectUrl=${props.location.pathname}`, state: { from: props.location } }} />
+            default:
+                return <Loader />
+        }
+    }, [isLogged, rest.location]);
+
     return (
         <Route
             {...rest}
-            render={props =>
-                isLogged() ? (
-                    <Component {...props} />
-                ) : (
-                    <Redirect to={{ pathname: '/login',  search: `?redirectUrl=${props.location.pathname}`, state: { from: props.location } }} />
-                )
-            }
+            render={componentComputed}
         />
     );
 }
 
 export default function() {
     const storeUser = useSelector(store => store.user);
+    const storeOrder = useSelector(store => store.order);
     const dispatch =  useDispatch();
-    const storageProfileJson = window?.sessionStorage.getItem(PROFILE_CUSTOMER_DATA) || 'null';
-    const dataProfile = JSON.parse(storageProfileJson);
+    const storageProfile = JSON.parse(window.sessionStorage.getItem(PROFILE_CUSTOMER_DATA));
+    const dataProfile = storageProfile?.constructor.name === 'Object' ? storageProfile : {};
+    const [time, setTimer, setCallback] = useQuantityControlFetch(TIMER_EXPIRE_CART_INITIAL);
+    const [isLogged, setIsLogged] = useState();
+
     const [basket, setBasket] = useState([]);
 
     useEffect(() => dataProfile && dispatch(setUser(dataProfile)), [])
-
-    const updateBasket = newItem => {
-        let hasInList = false;
-        const _basket = basket.map(m => {
-            if (m.id == newItem.id) {
-                hasInList = true;
-                return {
-                    ...m,
-                    quantity: (m.quantity + newItem.quantity) > 0 ? m.quantity + newItem.quantity : 0
-                }
-            }
-            return m;
-        });
-        setBasket(hasInList ? _basket : [..._basket, newItem]);
-    }
-
-    const clearBasket = () => setBasket([]);
 
     const updateProfile = (newValue = {}) => {
         window?.sessionStorage.setItem(PROFILE_CUSTOMER_DATA, JSON.stringify(newValue));
         dispatch(setUser(newValue));
     }
 
-    const isLogged = () => !!storeUser?.email || dataProfile;
+    useEffect(() => dispatch(fetchOrder()), []);
+
+    useEffect(() => {
+        setIsLogged(!!(storeUser?.email || dataProfile?.email))
+    }, [storeUser])
+
+    useEffect(() => {
+        const storageTimeCart = +(JSON.parse(window.sessionStorage.getItem(TIMER_EXPIRE_CART_KEY)) || -1);
+        if(storageTimeCart > 0) {
+            setCallback(() => () => {
+                window.sessionStorage.setItem(TIMER_EXPIRE_CART_KEY, -1);
+                dispatch(fetchOrder({ force: true }));
+            });
+            setTimer(storageTimeCart);
+        }
+    }, [storeOrder]);
 
     return (
         <Router>
@@ -92,8 +105,6 @@ export default function() {
                     path="/livro/:productId"
                     children={props => <Single
                         {...props}
-                        updateBasket={updateBasket}
-                        basket={basket} 
                     />}
                 />
                 <Route
@@ -101,9 +112,6 @@ export default function() {
                     path="/cesta-produtos"
                     children={props => <Cart
                         {...props}
-                        updateBasket={updateBasket}
-                        basket={basket} 
-                        clearBasket={clearBasket}
                     />}
                 />
                 <Route
@@ -117,7 +125,10 @@ export default function() {
 
                 <PrivateRoute exact path="/profile" isLogged={isLogged} component={() => <Profile />} />
                 <PrivateRoute exact path="/profile/endereco" isLogged={isLogged} component={() => <ProfileAddress />} />
-                <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={() => <ProfileCard />} />
+                {/* <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={() => <ProfileCard />} /> */}
+                <Route exact path="/profile/cartao">
+                    <ProfileCard />
+                </Route>
                 <PrivateRoute exact path="/profile/meus-pedidos" isLogged={isLogged} component={() => <ProfileOrders />} />
 
                 <PrivateRoute exact path="/admin" isLogged={isLogged} component={() => <Dashboard />} />

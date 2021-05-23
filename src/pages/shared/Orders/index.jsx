@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 
-import AdminHeader from '../../Admin/shared/AdminHeader'
 import SimpleTextAsButton from '../../../components/SimpleTextAsButton';
 import MyTable from '../../../components/MyTable';
 
 import * as S from './style';
+
+import { ORDER_STATUS_TO_FILTER } from '../../../utils/data/constants'
 
 import { defaultTableOptions } from './helper';
 import ModalContentHelper from './ModalContentHelper'
@@ -19,7 +20,7 @@ const Orders = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, ha
 
     useEffect(async () => {
         try {
-            const _orderList = await getAllOrders().then(r => r.data);
+            const _orderList = await getAllOrders().then(r => r.data.filter(o => !ORDER_STATUS_TO_FILTER.includes(o.status)));
             setOrderList(_orderList);
         } catch (error) {
             window.alert("Falha na obtenção da lista de pedidos");
@@ -50,7 +51,7 @@ const Orders = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, ha
                         )}
                     </div>
                     <div className="table-group">
-                        {orderList && <MyTable data={orderList} onClick={item => {setItemSelected(item); setShowModal('aboutOrder')}} {...defaultTableOptions} maxHeight="250px" />}
+                        {!!orderList.length && <MyTable data={orderList} onClick={item => {setItemSelected(item); setShowModal('aboutOrder')}} {...defaultTableOptions} maxHeight="250px" />}
                     </div>
                 </div>
             </S.Container>

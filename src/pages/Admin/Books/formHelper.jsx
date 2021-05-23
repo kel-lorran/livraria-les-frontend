@@ -9,7 +9,7 @@ import MyButton from '../../../components/MyButton';
 
 export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setActiveBookList, setInactiveBookList, setResultIsFiltered }) => {
     const createBookSubmit = async data => {
-        await saveNewBook({ ...data, active: 1 });
+        await saveNewBook(data);
         handleClose(true);
     }
 

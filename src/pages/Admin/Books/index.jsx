@@ -9,13 +9,13 @@ import * as S from './style';
 import { FormHelper } from './formHelper';
 import { TableHelper } from './tableHelper';
 
-import { getAllBooksActives, getAllBooksInactives } from '../../../actions/bookActions';
+import { getAllBooks, getAllBooksInactives } from '../../../actions/bookActions';
 
 const Books = () => {
     const [showModal, setShowModal] = useState(false);
     const [updateBookList, setUpdateBookList] = useState(false);
-    const [activeBookList, setActiveBookList] = useState(null);
-    const [inactiveBookList, setInactiveBookList] = useState(null);
+    const [activeBookList, setActiveBookList] = useState([]);
+    const [inactiveBookList, setInactiveBookList] = useState([]);
     const [itemSelected, setItemSelected] = useState();
     const [resultIsFiltered, setResultIsFiltered] = useState(false);
 
@@ -24,25 +24,25 @@ const Books = () => {
         if(shouldUpdate) setUpdateBookList(!updateBookList);
     }
 
-    useEffect(async () => {
-        try {
-            const _activeBookList = await getAllBooksActives().then(r => r.data);
-            setActiveBookList(_activeBookList);
-        } catch (error) {
-            window.alert("Falha na obtenção da lista de produtos ativos");
-            console.log(error);
-        }
-    }, [updateBookList])
+    // useEffect(async () => {
+    //     try {
+    //         const _activeBookList = await getAllBooks().then(r => r.data);
+    //         setActiveBookList(_activeBookList);
+    //     } catch (error) {
+    //         window.alert("Falha na obtenção da lista de produtos ativos");
+    //         console.log(error);
+    //     }
+    // }, [updateBookList])
 
-    useEffect(async () => {
-        try {
-            const _inactiveBookList = await getAllBooksInactives().then(r => r.data);
-            setInactiveBookList(_inactiveBookList);
-        } catch (error) {
-            window.alert("Falha na obtenção da lista de produtos inativos");
-            console.log(error);
-        }
-    }, [updateBookList])
+    // useEffect(async () => {
+    //     try {
+    //         const _inactiveBookList = await getAllBooksInactives().then(r => r.data);
+    //         setInactiveBookList(_inactiveBookList);
+    //     } catch (error) {
+    //         window.alert("Falha na obtenção da lista de produtos inativos");
+    //         console.log(error);
+    //     }
+    // }, [updateBookList])
 
     useEffect(() => {
         if(itemSelected) {
@@ -76,8 +76,8 @@ const Books = () => {
                             )}
                         </div>
                         <div className="table-group">
-                            {activeBookList && <TableHelper data={activeBookList} type="activeBooks" selectItem={item => setItemSelected(item)} />}
-                            {inactiveBookList && <TableHelper data={inactiveBookList} type="inactiveBooks" selectItem={item => setItemSelected(item)} />}
+                            {!!activeBookList.lenght && <TableHelper data={activeBookList} type="activeBooks" selectItem={item => setItemSelected(item)} />}
+                            {!!inactiveBookList.lenght && <TableHelper data={inactiveBookList} type="inactiveBooks" selectItem={item => setItemSelected(item)} />}
                         </div>
                     </div>
                 </S.Container>

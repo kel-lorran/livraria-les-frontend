@@ -22,11 +22,11 @@ export default ({ type, handleSubmit, handleClose, order, addressList, setOrder 
 
     const changeAddress = ({ target: { value }}) => {
         value && setBillingAddress(addressList.filter(({id}) => value == id)[0])
-         setOrder({ ...order, address: { delivery: order.address.delivery, billing: addressList.filter(({id}) => value == id)[0]} })
+         setOrder({ ...order, deliveryAddress: order.deliveryAddress, billingAddress: addressList.filter(({id}) => value == id)[0] })
     }
 
     useEffect(
-        () => billingAddress && setOrder({ ...order, address: { delivery: order.address.delivery, billing: billingAddress} }),
+        () => billingAddress && setOrder({ ...order, deliveryAddress: order.deliveryAddress, billingAddress }),
         [billingAddress]
     )
 
@@ -36,13 +36,13 @@ export default ({ type, handleSubmit, handleClose, order, addressList, setOrder 
                 <>
                     <S.WrapperDescriptionList>
                         <h4>Produtos</h4>
-                        {order.merchandise.map(({ book, ...rest }) => createDescriptionsList(productsListDescriptionHelper, { ...book, ...rest }))}
+                        {order.merchandiseList.map(({ book, ...rest }) => createDescriptionsList(productsListDescriptionHelper, { ...book, ...rest }))}
                         <h4>Endereço de entrega</h4>
-                        {createDescriptionsList(addressListDescriptionHelper, order.address.delivery)}
+                        {createDescriptionsList(addressListDescriptionHelper, order.deliveryAddress)}
                         <h4>Cartões</h4>
-                        {order.card.map(m => createDescriptionsList(cardListDescriptionHelper, m))}
-                        {!!order.couponApplied.length && <h4>Cupons</h4>}
-                        {order.couponApplied.map(c => <span key={c}>{c + '  '}</span>)}
+                        {order.creditCardList.map(m => createDescriptionsList(cardListDescriptionHelper, m))}
+                        {!!order.couponAppliedList.length && <h4>Cupons</h4>}
+                        {order.couponAppliedList.map(c => <span key={c.code}>{c.code + '  '}</span>)}
                         {order?.subTotal && <h5>Subtotal: {order.subTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</h5>}
                         {!!order?.discount && <h5>Desconto: {(order.discount * -1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</h5>}
                         {order && <h4>Total: {order.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</h4>}
@@ -59,7 +59,7 @@ export default ({ type, handleSubmit, handleClose, order, addressList, setOrder 
                                 </>
                             </MySelect>
                         </S.BillingAdrressWrapper>
-                        <MyButton onClick={() => handleClose()}>Cancelar</MyButton>
+                        <MyButton onClick={() => handleClose()}>Editar</MyButton>
                         <MyButton onClick={handleSubmit}>Confirmar</MyButton>
                     </S.ModalFooter>
                 </>

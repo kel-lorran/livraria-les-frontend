@@ -1,39 +1,73 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-import MyCard from '../../components/MyCard';
+import { setOrder } from '../../store/order';
+
 import MyHeader from '../../components/MyHeader';
 import MyButton from '../../components/MyButton';
 import Loader from '../../components/Loader';
 
 import * as S from './style';
 
-import { getBookById, } from '../../actions/bookActions';
 import { getMerchandiseById } from '../../actions/merchandiseActions';
+import { saveNewDraftOrder, updateDraftOrder } from '../../actions/orderActions';
 
-const Single = ({ match: { params }, history, updateBasket, basket }) => {
+import { updateMerchandiseList } from '../../utils';
+
+const Single = ({ match: { params }, history }) => {
+    const dispatch = useDispatch();
+    const storeOrder = useSelector(store => store.order);
     const [merchandise, setMerchandise] = useState();
+    const [showLoader, setShowLoader] = useState(true);
     const { productId } = params;
 
     useEffect(async () => {
         try {
-            const { book: [_book], ...rest} = await getMerchandiseById(productId).then(r => r.data);
-            setMerchandise({ ...rest, book: _book });
+            const result = await getMerchandiseById(productId).then(r => r.data);
+            setMerchandise(result);
+            setShowLoader(false);
         } catch (error) {
             window.alert("Falha na obtenção das informações do livro");
             console.log(error);
+            history.push('/');
         }
     }, [])
 
-    const buyItem = () => {
-        updateBasket({
-            ...merchandise,
-            quantity: 1,
-        });
+    const buyItem = async () => {
+        let result;
+        try {
+            setShowLoader(true);
+            if (!storeOrder.id) {
+                result = await saveNewDraftOrder({
+                    merchandiseList: [
+                        {
+                            ...merchandise,
+                            quantity: 1,
+                        }
+                    ]
+                }).then(r => r.data.data);
+            } else {
+                result =  await updateDraftOrder({
+                    id: storeOrder.id,
+                    merchandiseList: updateMerchandiseList({
+                        bookId: merchandise.book.id,
+                        quantity: 1,
+                        order: storeOrder
+                    })
+                }).then(r => r.data.data);
+            }
+            dispatch(setOrder(result));
+            setShowLoader(false);
+        } catch (error) {
+            window.alert('error na criação de pedido temporario, possivelmente falta de estoque');
+            history.push('/');
+        }
         history.push('/cesta-produtos');
     }
 
-    return merchandise ? ( 
+    return showLoader ? ( 
+        <Loader />
+    ) : (
         <S.PageWrapper>
             <MyHeader />
             <main>
@@ -63,8 +97,6 @@ const Single = ({ match: { params }, history, updateBasket, basket }) => {
                 </S.SectionTwo>
             </main>
         </S.PageWrapper>
-    ) : (
-        <Loader />
     )
 }
 

@@ -1,9 +1,9 @@
 import { abbreviateText } from '../../../utils';
 
-import { getAllBooksActives } from '../../../actions/bookActions';
+import { getAllBooks } from '../../../actions/bookActions';
 
 const buildOptionsBook = async () => {
-    const books = await getAllBooksActives().then(r => r.data);
+    const books = await getAllBooks().then(r => r.data);
     return books.map(({ ISBN, title, id }) => {
         const text = `${title.replace(new RegExp(`(?<=.{12}).+`), '...')} - ISBN: ${ISBN}`;
         return {

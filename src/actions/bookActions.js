@@ -1,10 +1,10 @@
 import { genericPost, genericGet, genericPut } from './constants';
 
 export const saveNewBook = data => {
-    return genericPost(data,'/book');
+    return genericPost(data,'/product');
 }
 
-export const getAllBooksActives = () => {
+export const getAllBooks = () => {
     return genericGet('/book?active=1');
 }
 

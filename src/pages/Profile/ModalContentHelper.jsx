@@ -6,7 +6,7 @@ import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 
 import * as S from './shared/style';
 
-import { inputMap, inputMapCard } from './helper';
+import { inputMap, inputMapCard, inputMapPersonData } from './helper';
 
 import { updateCustomer } from '../../actions/customerActions';
 import { updateAddress, saveNewAddress, deleteAddress } from '../../actions/addressActions';
@@ -14,17 +14,17 @@ import { saveNewCard, deleteCard } from '../../actions/cardActions';
 
 export default ({ type, handleClose, itemSelected, setShowModal }) => {
     const updateCustomerWithoutAddressListSubmit = async data => {
-        await updateCustomer({ ...itemSelected, ...data });
+        await updateCustomer({ ...itemSelected, ...data, birthDate: itemSelected.birthDate === data.birthDate ? null : data.birthDate  });
         handleClose(true);
     }
 
     const createAddressSubmit = async data => {
-        await saveNewAddress(data, itemSelected.id)
+        await saveNewAddress(data)
         handleClose(true);
     }
 
     const createCardSubmit = async data => {
-        await saveNewCard(data, itemSelected.id)
+        await saveNewCard(data)
         handleClose(true);
     }
 
@@ -56,7 +56,7 @@ export default ({ type, handleClose, itemSelected, setShowModal }) => {
                     <S.ModalHeader>
                         <h3>Alterar Perfil</h3>
                     </S.ModalHeader>
-                    <CustomForm s="min-height: 20vh;" inputMap={[inputMap[0]]} submmitButtonText="Atualizar"  item={itemSelected} onSubmit={updateCustomerWithoutAddressListSubmit} />
+                    <CustomForm s="min-height: 20vh;" inputMap={[inputMapPersonData]} submmitButtonText="Atualizar"  item={itemSelected} onSubmit={updateCustomerWithoutAddressListSubmit} />
                 </>
             )
         case 'aboutAddress':

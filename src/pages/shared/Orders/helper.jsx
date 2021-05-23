@@ -3,11 +3,11 @@ import { abbreviateText } from '../../../utils';
 const dateFormatter = row => (new Date(row.date)).toLocaleDateString('pt-BR')
 
 const merchandiseFormatter = row => {
-    return row.merchandise.map(m => <div key={`merchan_${m.id}`}>{abbreviateText(m.book.title, 30)}</div>)
+    return row.merchandiseList.map(m => <div key={`merchan_${m.id}`}>{abbreviateText(m.book.title, 30)}</div>);
 }
 
 const addressFormatter = row => {
-    const { id, publicPlaceType, publicPlaceName, city, state } = row.address.delivery
+    const { id, publicPlaceType, publicPlaceName, city, state } = row.deliveryAddress;
     return (
         <div key={`addr_${id}`}>
             {`${publicPlaceType} ${abbreviateText(publicPlaceName, 12)}, ${city}-${state}`}
@@ -19,12 +19,12 @@ export const defaultTableOptions = {
     showElements: [
         {
             title: 'produtos',
-            key: 'merchandise',
+            key: 'merchandiseList',
             formatter: merchandiseFormatter
         },
         {
             title: 'endereços',
-            key: 'address',
+            key: 'deliveryAddress',
             formatter: addressFormatter
         },
         {
@@ -110,10 +110,11 @@ export const inputMapToUpdateStatus = [
             required: true,
             options: [
                 { value: 'em processamento', text: 'Em processamento'},
+                { value: 'aprovada', text: 'Compra Aprovada'},
                 { value: 'recusada', text: 'Compra recusada'},
+                { value: 'em transporte', text: 'Em transporte'},
                 { value: 'entregue', text: 'Entregue'},
                 { value: 'em troca', text: 'Em troca'},
-                // { value: 'troca autorizada', text: 'Troca autorizada'},
                 { value: 'troca recusada', text: 'Troca recusada'},
                 { value: 'troca autorizada', text: 'Troca autorizada'},
                 { value: 'mercadoria devolvida', text: 'Mercadoria devolvida'},

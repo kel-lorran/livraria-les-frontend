@@ -16,7 +16,7 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
     
     const createCustomerSubmit = async data => {
         if(dataToSend) {
-            await saveNewCustomer({ ...dataToSend, active: 1}, [data] );
+            await saveNewCustomer({ ...dataToSend, ...data } );
             handleClose(true);
             setStepCurrent(1);
         } else {
@@ -31,7 +31,7 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
     }
 
     const updateCustomerWithoutAddressListSubmit = async data => {
-        await updateCustomer({ ...itemSelected, ...data });
+        await updateCustomer({ ...itemSelected, ...data, birthDate: itemSelected.birthDate === data.birthDate ? null : data.birthDate  });
         handleClose(true);
     }
 

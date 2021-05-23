@@ -12,7 +12,7 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setAct
     const [dataToSend, setDataToSend] = useState();
 
     const incrementMerchandiseSubmit = async data => {
-        await incrementStock({ ...data, active: 1 });
+        await incrementStock(data);
         handleClose(true);
     }
 

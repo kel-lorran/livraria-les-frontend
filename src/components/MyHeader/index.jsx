@@ -6,7 +6,7 @@ import Logo from '../../assets/brands/LesVraria.svg';
 
 const MyHeader = ({ children, authStatus = '' }) => {
     const storeUser = useSelector(store => store.user);
-    const authStatusComputed = !!storeUser || authStatus;
+    const authStatusComputed = !!storeUser?.token || authStatus;
 
     const buttonByAuthStatus = {
         '': <Link to="/login" key="undefined"><MyButton>Entrar</MyButton></Link>,
@@ -20,7 +20,7 @@ const MyHeader = ({ children, authStatus = '' }) => {
                 <div className="header-items-group">
                     <Link to="/"><img className="logo" src={Logo} /></Link> 
                     {buttonByAuthStatus[authStatusComputed]}
-                    <Link to="/cesta-produtos"><MyButton><i className="fas fa-shopping-cart"></i></MyButton></Link>
+                    <Link to="/cesta-produtos"><MyButton><i className="fas fa-shopping-cart"><span></span></i></MyButton></Link>
                 </div>
             </S.Container>
             {children && (

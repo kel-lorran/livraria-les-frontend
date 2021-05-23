@@ -26,14 +26,14 @@ const Home = () => {
                 <S.SectionOne>
                     <S.Container>
                         <div className="book-display">
-                            {merchandiseList.map(({book: [b]}) => {
+                            {merchandiseList.map(({ book }) => {
                                 return (
                                     <MyCard
-                                        key={b.id}
+                                        key={book.id}
                                         cover="https://via.placeholder.com/400x600.jpg?text=Capa+Livro"
-                                        callToAction={<Link to={`/livro/${b.id}`}>COMPRAR</Link>}
+                                        callToAction={<Link to={`/livro/${book.id}`}>COMPRAR</Link>}
                                     >
-                                        {b.title}
+                                        {book.title}
                                     </MyCard>
                                 )
                             })}

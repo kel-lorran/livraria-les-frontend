@@ -13,8 +13,7 @@ import { getFullProfile } from '../../actions/customerActions';
 import ModalContentHelper from './ModalContentHelper';
 
 const Address = () => {
-    const storeUser = useSelector(store => store.user);
-    const [customer, setCustomer] = useState();
+    const [customer, setCustomer] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [fetchAgain, setFetchAgain] = useState(false);
     const [itemSelected, setItemSelected] = useState();
@@ -26,7 +25,7 @@ const Address = () => {
 
     useEffect(async () => {
         try {
-            const _customer = await getFullProfile().then(r => r.data[0]);
+            const _customer = await getFullProfile().then(r => r.data);
             setCustomer(_customer);
         } catch (error) {
             window.alert("Falha na obtenção da lista de endereços");
@@ -49,7 +48,7 @@ const Address = () => {
                             </SimpleTextAsButton>
                         </div>
                         <div className="table-group">
-                            {customer?.address && <TableHelper data={customer?.address} type="activeAddress" selectItem={item => {setItemSelected(item);setShowModal('aboutAddress')}} />}
+                            {!!customer.addressList?.length && <TableHelper data={customer?.addressList} type="activeAddress" selectItem={item => {setItemSelected(item);setShowModal('aboutAddress')}} />}
                         </div>
                     </div>
                 </S.Container>

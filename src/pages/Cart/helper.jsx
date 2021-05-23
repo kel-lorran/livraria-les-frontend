@@ -45,8 +45,8 @@ export const tableOptionsAddress = {
             columnWidth: 6
         },
         {
-            title: 'CEP',
-            key: 'CEP',
+            title: 'cep',
+            key: 'cep',
         },
         {
             title: 'Rotulo',
