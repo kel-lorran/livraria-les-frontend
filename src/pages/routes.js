@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setUser } from '../store/user';
@@ -6,9 +6,10 @@ import { setUser } from '../store/user';
 import {
     BrowserRouter as Router,
     Route,
-    Redirect,
     Switch
 } from 'react-router-dom'
+
+import PrivateRoute from './PrivateRoute';
 
 //admin pages
 import Dashboard from './Admin/Home';
@@ -31,33 +32,11 @@ import ProfileAddress from './Profile/address';
 import ProfileCard from './Profile/card';
 import ProfileOrders from './Profile/Orders';
 
-import Loader from '../components/Loader';
-
 import { PROFILE_CUSTOMER_DATA, TIMER_EXPIRE_CART_KEY, TIMER_EXPIRE_CART_INITIAL } from '../utils/data/constants';
 
 import { fetchOrder } from '../store/order';
 
 import { useQuantityControlFetch } from '../hooks/useQuantityControlFetch';
-
-const PrivateRoute = ({ component: Component, isLogged, ...rest }) => {
-    const componentComputed = useCallback(props => {
-        switch (isLogged) {
-            case true:
-                return <Component {...props} />;
-            case false:
-                return <Redirect to={{ pathname: '/login', search: `?redirectUrl=${props.location.pathname}`, state: { from: props.location } }} />
-            default:
-                return <Loader />
-        }
-    }, [isLogged, rest.location]);
-
-    return (
-        <Route
-            {...rest}
-            render={componentComputed}
-        />
-    );
-}
 
 export default function() {
     const storeUser = useSelector(store => store.user);
@@ -125,10 +104,7 @@ export default function() {
 
                 <PrivateRoute exact path="/profile" isLogged={isLogged} component={() => <Profile />} />
                 <PrivateRoute exact path="/profile/endereco" isLogged={isLogged} component={() => <ProfileAddress />} />
-                {/* <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={() => <ProfileCard />} /> */}
-                <Route exact path="/profile/cartao">
-                    <ProfileCard />
-                </Route>
+                <PrivateRoute exact path="/profile/cartao" isLogged={isLogged} component={() => <ProfileCard />} />
                 <PrivateRoute exact path="/profile/meus-pedidos" isLogged={isLogged} component={() => <ProfileOrders />} />
 
                 <PrivateRoute exact path="/admin" isLogged={isLogged} component={() => <Dashboard />} />

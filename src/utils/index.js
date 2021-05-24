@@ -118,3 +118,12 @@ export const confirmPasswordValidation = (e) => {
   else
     setError(e.target);
 }
+
+export const confirmTimeInterval = e => {
+  const val = e.target.value
+  const masterVal = document.getElementById(e.target.dataset.inputmaster)?.value
+  if (val && masterVal && val <= masterVal)
+    setError(e.target);
+  else
+    removeError(e.target)
+}

@@ -33,7 +33,7 @@ export const updateOrderStatus = data => {
 }
 
 export const searchOrders = search => {
-    return genericGet(`/order${search}`)
+    return genericGet(`/order/search${search}`)
 }
 
 export const updateOrderExchangeMerchandise = data => {
