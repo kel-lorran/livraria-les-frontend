@@ -7,3 +7,7 @@ export const login = data => {
 // export const saveNewUser = data => {
 //     return genericPost(data, '/user');
 // }
+
+export const deleteUser =  data => {
+    return genericDelete('/user');
+}

@@ -21,24 +21,24 @@ const Signin = ({ location: { search }, updateProfile, history }) => {
         if(dataToSend) {
             try {
                 await saveNewCustomer({ ...dataToSend, ...data });
+                try{
+                    const { email, password } = dataToSend;
+                    const result = await login({ email, password }).then(r => r.data);
+        
+                    if(result.token) {
+                        updateProfile({ status: !!result.token, email, token: result.token });
+                        window.alert('Sucesso na autenticação')
+            
+                        history.replace(redirectUrl || '/');
+                    }
+                } catch (error) {
+                    window.alert('Falha na autenticação automática, tente manualmente')
+                    history.replace('/login');
+                }
             } catch (error) {
                 window.alert('Falha na registro');
             }
 
-            try{
-                const { email, password } = dataToSend;
-                const result = await login({ email, password }).then(r => r.data);
-    
-                if(result.token) {
-                    updateProfile({ status: !!result.token, email, token: result.token });
-                    window.alert('Sucesso na autenticação')
-        
-                    history.replace(redirectUrl || '/');
-                }
-            } catch (error) {
-                window.alert('Falha na autenticação automática, tente manualmente')
-                history.replace('/login');
-            }
         } else {
             setStepCurrent(2);
             setDataToSend({ ...data });

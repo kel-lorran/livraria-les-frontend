@@ -38,9 +38,9 @@ const Card = ({ setShowModal, fetchAgain, setModalContent, setItemSelected }) =>
                             <SimpleTextAsButton onClick={() => {setItemSelected(customer); setShowModal('createCard')}} >
                                 + novo cartão
                             </SimpleTextAsButton>
-                            <SimpleTextAsButton onClick={() => {setItemSelected(customer); setShowModal('removeCard')}} >
+                            {/* <SimpleTextAsButton onClick={() => {setItemSelected(customer); setShowModal('removeCard')}} >
                                 - remover cartões
-                            </SimpleTextAsButton>
+                            </SimpleTextAsButton> */}
                         </div>
                         <div className="table-group">
                             {!!customer.creditCardList?.length && <MyTable data={customer.creditCardList} onClick={item => {setItemSelected(item); setShowModal('aboutCard')}} {...tableOptionsCard} maxHeight="150px" />}

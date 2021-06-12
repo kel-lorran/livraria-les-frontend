@@ -43,9 +43,9 @@ const Address = () => {
                             <SimpleTextAsButton onClick={() => {setItemSelected(customer); setShowModal('createAddress')}} >
                                 + novo endereço
                             </SimpleTextAsButton>
-                            <SimpleTextAsButton onClick={() => {setItemSelected(customer); setShowModal('removeAddress')}} >
+                            {/* <SimpleTextAsButton onClick={() => {setItemSelected(customer); setShowModal('removeAddress')}} >
                                 - remover endereços
-                            </SimpleTextAsButton>
+                            </SimpleTextAsButton> */}
                         </div>
                         <div className="table-group">
                             {!!customer.addressList?.length && <TableHelper data={customer?.addressList} type="activeAddress" selectItem={item => {setItemSelected(item);setShowModal('aboutAddress')}} />}

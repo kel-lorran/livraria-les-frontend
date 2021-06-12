@@ -10,7 +10,7 @@ import * as S from './shared/style.js';
 
 import { inputMapPersonData } from './helper';
 import ModalContentHelper from './ModalContentHelper';
-
+import { personDataParses, createDescriptionsList } from '../shared/utils';
 import WithModal from '../../hocs/withModal';
 
 import { getFullProfile } from '../../actions/customerActions';
@@ -37,12 +37,6 @@ const Profile = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, h
         }
     }, [storeUser, fetchAgain])
 
-    const createDescriptionsList = (defaultHelper, item) => {
-        return defaultHelper.map(step => step.reduce((ac, inp) => {
-            return [...ac, <React.Fragment key={'dt' + inp.name}><dt>{inp.label || inp.placeholder}</dt><dd>{item[inp.name]}</dd><br /></React.Fragment>]
-        }, []))
-    }
-
     useEffect(() => setModalContent(props => props => <ModalContentHelper {...props} />), []);
 
     return customer ? (
@@ -53,14 +47,14 @@ const Profile = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, h
                     <S.Container>
                         <div>
                             <MyButton onClick={() => setShowModal('updateProfile')}>Editar perfil</MyButton>
-                            <MyButton>Excluir Conta</MyButton>
+                            {/* <MyButton>Excluir Conta</MyButton> */}
                         </div>
                     </S.Container>
                 </S.SectionOne>
                 <S.SectionTwo>
                     <S.Container>
                         <div>
-                            <S.WrapperDescriptionList className="person-data-description-list">{createDescriptionsList([inputMapPersonData], customer)}</S.WrapperDescriptionList>
+                            <S.WrapperDescriptionList className="person-data-description-list">{createDescriptionsList([inputMapPersonData], customer, personDataParses)}</S.WrapperDescriptionList>
                         </div>
                     </S.Container>
                 </S.SectionTwo>

@@ -5,7 +5,7 @@ export const saveNewBook = data => {
 }
 
 export const getAllBooks = () => {
-    return genericGet('/book?active=1');
+    return genericGet('/product/active');
 }
 
 export const getBookById = id => {
@@ -13,7 +13,7 @@ export const getBookById = id => {
 }
 
 export const getAllBooksInactives = () => {
-    return genericGet('/book?active=0');
+    return genericGet('/product/inactive');
 }
 
 export const searchBooks = search => {

@@ -64,4 +64,11 @@ export const Container = styled.div`
             margin-left: 19px;
         }
     }
+    .cart-expire-display {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        padding: 6px 0;
+        color: red;
+    }
 `

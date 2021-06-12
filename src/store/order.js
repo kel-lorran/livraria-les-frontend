@@ -12,18 +12,19 @@ const initialState = {
 
 export const fetchOrder = createAsyncThunk(
     'user/fetch',
-    async ({ force }, { getState }) => {
+    async (force, { getState }) => {
         const { order } = getState();
         if(order.id && (!order.merchandiseList.length || force)) {
-            try {
-                const result = await getOrderById(order.id).then(r => r.data);
-                return result;
-            } catch {
-                return { ...initialState, id: undefined };
-            }
+            const result = await getOrderById(order.id).then(r => r.data);
+            return result;
         }
     }
 )
+
+const _clearOrder = () => {
+    window.sessionStorage.setItem(ORDER_ID, null);
+    return { ...initialState, id: undefined };
+}
 
 const orderSlice = createSlice({
     name: 'order',
@@ -36,14 +37,14 @@ const orderSlice = createSlice({
             }
             return initialState
         },
-        clearOrder: () => {
-            window.sessionStorage.setItem(ORDER_ID, "");
-            return { ...initialState, id: undefined };
-        }
+        clearOrder: _clearOrder
     },
     extraReducers: {
         [fetchOrder.fulfilled]: (state, action) => {
             return action.payload
+        },
+        [fetchOrder.rejected]: (state, action) => {
+            _clearOrder()
         }
     }
 })

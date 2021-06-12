@@ -8,6 +8,7 @@ export const saveNewDraftOrder = data => {
 }
 
 export const saveNewOrder = data => {
+    window.sessionStorage.setItem(TIMER_EXPIRE_CART_KEY, TIMER_EXPIRE_CART_INITIAL);
     return genericPost(data, '/order');
 }
 

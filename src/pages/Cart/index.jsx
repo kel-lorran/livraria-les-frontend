@@ -21,8 +21,11 @@ import { getOrderById, updateDraftOrder, saveNewOrder, commitOrder } from '../..
 import { setOrder, clearOrder } from '../../store/order';
 
 import { updateMerchandiseList } from '../../utils';
+import { TIMER_EXPIRE_CART_KEY, TIMER_EXPIRE_CART_INITIAL } from 'utils/data/constants';
 
 import { useQuantityControlFetch } from '../../hooks/useQuantityControlFetch';
+
+const TIMER_PER_STEP = 30000;
 
 const Cart = ({ history }) => {
     const dispatch =  useDispatch();
@@ -38,6 +41,8 @@ const Cart = ({ history }) => {
     const [selectedCoupons, setSelectedCoupons] = useState([]);
     const [cardList, setCardList] = useState([]);
     const quantityControlFetch = useQuantityControlFetch()[2];
+    const [internTimer, setInternTimer, verifyValidityOfCart] = useQuantityControlFetch();
+    const [cartSessionStoreTime, setCartSessionStoreTime] = useState();
     
     const [showModal, setShowModal] = useState(false);
 
@@ -50,9 +55,10 @@ const Cart = ({ history }) => {
                 getOrderById(storeOrder.id).then(r => dispatch(setOrder(r.data)))
                 window.alert("Quantidade dessa mercadoria excedeu nosso estoque, voce pode tentar novamente com um valor menor");
             })
-        });
+        }, 4000);
         dispatch(setOrder(newOrder));
-    };
+    }; 
+
     const buildData = (rawData, quantityControl) => {
         return rawData.map(({ book, ...rest }) => ({ ...rest, ...book, quantityControl}));
     }
@@ -71,6 +77,23 @@ const Cart = ({ history }) => {
             setCustomer(_customer);
         }
     }, [storeUser])
+
+    useEffect(() => {
+        if (storeOrder.merchandiseList.length > 0) {
+            verifyValidityOfCart(() => () => {
+                const timer = +(window.sessionStorage.getItem(TIMER_EXPIRE_CART_KEY) || 0);
+                if(timer > 0) {
+                    const newValueToRestTime = timer - TIMER_PER_STEP;
+                    window.sessionStorage.setItem(TIMER_EXPIRE_CART_KEY, newValueToRestTime);
+                    setCartSessionStoreTime(newValueToRestTime);
+                    setInternTimer(TIMER_PER_STEP);
+                } else {
+                    window.alert(`O prazo de ${TIMER_EXPIRE_CART_INITIAL / 1000} segundos de reserva dos produtos na cesta expirou, será necessario inseri-los novamente para continuar. Fazemos isso para dar oportunidades a todos de terem acessos a nossos produtos.`);
+                    dispatch(clearOrder());
+                }
+            }, 3000);
+        }
+    }, [storeOrder]);
 
     const handleCloseModal = () => {
         setShowModal(false);
@@ -121,7 +144,10 @@ const Cart = ({ history }) => {
  
     return ( 
         <S.PageWrapper>
-            <MyHeader />
+            <MyHeader cartExpireTime={{
+                text: 'a sua cesta de compras expira em: ',
+                value: cartSessionStoreTime + internTimer
+            }} />
             <main>
                 <S.SectionOne>
                     <S.Container>

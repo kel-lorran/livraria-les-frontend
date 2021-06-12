@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import * as S from './style';
 import Logo from '../../assets/brands/LesVraria.svg';
 
-const MyHeader = ({ children, authStatus = '' }) => {
+const MyHeader = ({ children, cartExpireTime, authStatus = '' }) => {
     const storeUser = useSelector(store => store.user);
     const authStatusComputed = !!storeUser?.token || authStatus;
 
@@ -20,7 +20,14 @@ const MyHeader = ({ children, authStatus = '' }) => {
                 <div className="header-items-group">
                     <Link to="/"><img className="logo" src={Logo} /></Link> 
                     {buttonByAuthStatus[authStatusComputed]}
-                    <Link to="/cesta-produtos"><MyButton><i className="fas fa-shopping-cart"><span></span></i></MyButton></Link>
+                    <Link to="/cesta-produtos">
+                        <MyButton><i className="fas fa-shopping-cart"><span></span></i></MyButton>
+                    </Link>
+                    {cartExpireTime?.value > 0 && (
+                        <span className="cart-expire-display">
+                            {`${cartExpireTime.text}${cartExpireTime.value / 1000} segundos`}
+                        </span>
+                    )}
                 </div>
             </S.Container>
             {children && (

@@ -24,25 +24,25 @@ const Books = () => {
         if(shouldUpdate) setUpdateBookList(!updateBookList);
     }
 
-    // useEffect(async () => {
-    //     try {
-    //         const _activeBookList = await getAllBooks().then(r => r.data);
-    //         setActiveBookList(_activeBookList);
-    //     } catch (error) {
-    //         window.alert("Falha na obtenção da lista de produtos ativos");
-    //         console.log(error);
-    //     }
-    // }, [updateBookList])
+    useEffect(async () => {
+        try {
+            const _activeBookList = await getAllBooks().then(r => r.data);
+            setActiveBookList(_activeBookList);
+        } catch (error) {
+            window.alert("Falha na obtenção da lista de produtos ativos");
+            console.log(error);
+        }
+    }, [updateBookList])
 
-    // useEffect(async () => {
-    //     try {
-    //         const _inactiveBookList = await getAllBooksInactives().then(r => r.data);
-    //         setInactiveBookList(_inactiveBookList);
-    //     } catch (error) {
-    //         window.alert("Falha na obtenção da lista de produtos inativos");
-    //         console.log(error);
-    //     }
-    // }, [updateBookList])
+    useEffect(async () => {
+        try {
+            const _inactiveBookList = await getAllBooksInactives().then(r => r.data);
+            setInactiveBookList(_inactiveBookList);
+        } catch (error) {
+            window.alert("Falha na obtenção da lista de produtos inativos");
+            console.log(error);
+        }
+    }, [updateBookList])
 
     useEffect(() => {
         if(itemSelected) {
@@ -76,8 +76,8 @@ const Books = () => {
                             )}
                         </div>
                         <div className="table-group">
-                            {!!activeBookList.lenght && <TableHelper data={activeBookList} type="activeBooks" selectItem={item => setItemSelected(item)} />}
-                            {!!inactiveBookList.lenght && <TableHelper data={inactiveBookList} type="inactiveBooks" selectItem={item => setItemSelected(item)} />}
+                            {!!activeBookList.length && <TableHelper data={activeBookList} type="activeBooks" selectItem={item => setItemSelected(item)} />}
+                            {!!inactiveBookList.length && <TableHelper data={inactiveBookList} type="inactiveBooks" selectItem={item => setItemSelected(item)} />}
                         </div>
                     </div>
                 </S.Container>

@@ -5,12 +5,14 @@ import MyButton from '../../components/MyButton';
 import SimpleTextAsButton from '../../components/SimpleTextAsButton';
 
 import * as S from './shared/style';
-
+import { createDescriptionsList } from '../shared/utils';
 import { inputMap, inputMapCard, inputMapPersonData } from './helper';
+import { logout } from 'utils';
 
 import { updateCustomer } from '../../actions/customerActions';
 import { updateAddress, saveNewAddress, deleteAddress } from '../../actions/addressActions';
 import { saveNewCard, deleteCard } from '../../actions/cardActions';
+import { deleteUser } from '../../actions/userActions';
 
 export default ({ type, handleClose, itemSelected, setShowModal }) => {
     const updateCustomerWithoutAddressListSubmit = async data => {
@@ -33,21 +35,28 @@ export default ({ type, handleClose, itemSelected, setShowModal }) => {
         handleClose(true);
     }
 
-    const createDescriptionsList = (defaultHelper, item) => {
-        return defaultHelper.map(step => step.reduce((ac, inp) => {
-            return [...ac, <React.Fragment key={'dt' + inp.name}><dt>{inp.label || inp.placeholder}</dt><dd>{item[inp.name]}</dd><br /></React.Fragment>]
-        }, []))
-    }
-
-    const handleRemoveAddress = async addressId => {
-        await deleteAddress(addressId);
-        handleClose(true);
-    }
-
     const handleRemoveCard = async cardId => {
         await deleteCard(cardId);
         handleClose(true);
     }
+
+    const deleteAccountSubmit = async () => {
+        await deleteUser();
+        logout();
+    }
+
+    // const makeListWithCheckBox = order => {
+    //     return (itemSelected?.addressList || itemSelected).map((a) => {
+    //         const key = a.addressLabel;
+    //         const _id = `check_${a.id}`;
+    //         return (
+    //             <S.CustomLi key={key}>
+    //                 <input id={_id} data-merchandiseide={a.id} type="checkbox" />
+    //                 <label htmlFor={_id}>{`${a.addressLabel} - ${a.publicPlaceType} ${a.publicPlaceName}`}</label>
+    //             </S.CustomLi>
+    //         ) 
+    //     })
+    // }
     
     switch (type) {
         case 'updateProfile':
@@ -93,10 +102,15 @@ export default ({ type, handleClose, itemSelected, setShowModal }) => {
                     <S.ModalHeader>
                         <h3>Remover endereços</h3>
                     </S.ModalHeader>
-                    <ul>
-                        {(itemSelected?.address || itemSelected).map(a => <li key={a.addressLabel}><SimpleTextAsButton onClick={() => handleRemoveAddress(a.id)} fontSize="16px" >{`Excluir - ${a.addressLabel} - ${a.publicPlaceType} ${a.publicPlaceName}`}</SimpleTextAsButton></li>)}
-                    </ul>
-                    
+                    {/* <form onSubmit={}>
+                        <ul>
+                            {makeListWithCheckBox(itemSelected)}
+                        </ul>
+                        <S.ModalFooter>
+                            <MyButton onClick={() => handleClose()}>Cancelar</MyButton>
+                            <MyButton type="submit">Confirmar</MyButton>
+                        </S.ModalFooter>
+                    </form> */}
                 </>
             )
         case 'createCard':
@@ -127,6 +141,18 @@ export default ({ type, handleClose, itemSelected, setShowModal }) => {
                         {(itemSelected?.card || itemSelected).map(c => <li key={c.label}><SimpleTextAsButton onClick={() => handleRemoveCard(c.id)} fontSize="16px" >{`Excluir - ${c.label} - ${c.creditCardCompany}`}</SimpleTextAsButton></li>)}
                     </ul>
                     
+                </>
+            )
+        case 'deleteAccount':
+            return (
+                <>
+                    <S.ModalHeader>
+                        <h3>Certeza que deseja deletar sua conta permanentemente?</h3>
+                    </S.ModalHeader>
+                    <S.ModalFooter>
+                        <MyButton onClick={() => handleClose()}>Não</MyButton>
+                        <MyButton onClick={deleteAccountSubmit}>Sim</MyButton>
+                    </S.ModalFooter>
                 </>
             )
         

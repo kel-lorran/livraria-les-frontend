@@ -8,18 +8,14 @@ export const inputMap = [
             name: 'name',
             label:  'nome',
             required: true,
-            minLength: 3,
-            pattern: "\\w+",
-            title: '3 ou mais letras'
+            minLength: 2
         },
         {   
             componentName: 'MyInput',
             name: 'lastName',
             label:  'sobrenome',
             required: true,
-            minLength: 3,
-            pattern: "\\w+",
-            title: '3 ou mais letras'
+            minLength: 2
         },
         {
             componentName: 'MySelect',
@@ -38,8 +34,7 @@ export const inputMap = [
             label:  'cpf',
             required: true,
             mask: cpfMask,
-            onBlur: cpfValidation,
-            title: 'cpf inválido'
+            onBlur: cpfValidation
         },
         {   
             componentName: 'MyInput',
@@ -72,8 +67,8 @@ export const inputMap = [
             label:  'senha',
             type: 'password',
             required: true,
-            pattern: '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}',
-            title: 'Deve conter ao menos um número, uma letra maiúscula e uma minúscula, e ter mais de 8 caracteres',
+            pattern: '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{8,}',
+            title: 'Deve conter ao menos um número, uma letra maiúscula, uma minúscula e um caractere especial, e ter mais de 8 caracteres',
             id: "signinpassword1245"
         },
         {   

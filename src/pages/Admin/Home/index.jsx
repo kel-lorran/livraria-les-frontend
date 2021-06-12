@@ -34,9 +34,7 @@ const Home = () => {
 
         const draftDataSets = list.reduce((ac, { merchandiseList, date }) => {
             merchandiseList.forEach(({ book: { title }, quantity }) => {
-                if (ac[title]) {
-                    ac[title].data[mapDayIndex[date.replace(/t.+/gi, 'T00:00:00')]] += +quantity
-                } else {
+                if (!ac[title]) {
                     const color = `${((Math.random() * 1000) % 256).toFixed()},${((Math.random() * 1000) % 256).toFixed()},${((Math.random() * 1000) % 256).toFixed()}`;
                     ac[title] = {
                         label: title.substr(0, 14),
@@ -45,6 +43,7 @@ const Home = () => {
                         borderColor: `rgba(${color}, 0.2)`,
                     }
                 }
+                ac[title].data[mapDayIndex[date.replace(/t.+/gi, 'T00:00:00')]] += +quantity
             })
             return ac;
         }, {});
@@ -60,7 +59,7 @@ const Home = () => {
         }
     }
 
-    return (console.count('dashboard')) || (
+    return (
         <S.PageWrapper>
             <AdminHeader />
             <main>

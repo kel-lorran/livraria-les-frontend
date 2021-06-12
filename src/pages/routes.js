@@ -32,11 +32,9 @@ import ProfileAddress from './Profile/address';
 import ProfileCard from './Profile/card';
 import ProfileOrders from './Profile/Orders';
 
-import { PROFILE_CUSTOMER_DATA, TIMER_EXPIRE_CART_KEY, TIMER_EXPIRE_CART_INITIAL } from '../utils/data/constants';
+import { PROFILE_CUSTOMER_DATA } from '../utils/data/constants';
 
 import { fetchOrder } from '../store/order';
-
-import { useQuantityControlFetch } from '../hooks/useQuantityControlFetch';
 
 export default function() {
     const storeUser = useSelector(store => store.user);
@@ -44,7 +42,6 @@ export default function() {
     const dispatch =  useDispatch();
     const storageProfile = JSON.parse(window.sessionStorage.getItem(PROFILE_CUSTOMER_DATA));
     const dataProfile = storageProfile?.constructor.name === 'Object' ? storageProfile : {};
-    const [time, setTimer, setCallback] = useQuantityControlFetch(TIMER_EXPIRE_CART_INITIAL);
     const [isLogged, setIsLogged] = useState();
 
     const [basket, setBasket] = useState([]);
@@ -62,18 +59,7 @@ export default function() {
         setIsLogged(!!(storeUser?.email || dataProfile?.email))
     }, [storeUser])
 
-    useEffect(() => {
-        const storageTimeCart = +(JSON.parse(window.sessionStorage.getItem(TIMER_EXPIRE_CART_KEY)) || -1);
-        if(storageTimeCart > 0) {
-            setCallback(() => () => {
-                window.sessionStorage.setItem(TIMER_EXPIRE_CART_KEY, -1);
-                dispatch(fetchOrder({ force: true }));
-            });
-            setTimer(storageTimeCart);
-        }
-    }, [storeOrder]);
-
-    return (
+    return (console.count('routes')) || (
         <Router>
             <Switch>
                 <Route exact path="/">
