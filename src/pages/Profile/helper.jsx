@@ -1,4 +1,5 @@
-export { inputMap, inputMapPersonData } from '../Admin/Customers/helper';
+export { inputMapPersonData } from '../Admin/Customers/helper';
+export { inputMap } from 'pages/shared/customers/helper';
 
 export { TableHelper } from '../Admin/Customers/tableHelper';
 

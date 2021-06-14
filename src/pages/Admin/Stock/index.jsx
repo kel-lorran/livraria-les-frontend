@@ -13,7 +13,7 @@ import WithModal from '../../../hocs/withModal';
 
 import { getAllMerchandise } from '../../../actions/merchandiseActions';
 
-const Stock = ({ setShowModal, fetchAgain, setModalContent, handleCloseModal }) => {
+const Stock = ({ setShowModal, fetchAgain, setModalContent, handleCloseModal, setItemSelected }) => {
     const [merchandiseList, setMerchandiseList] = useState();
     const [resultIsFiltered, setResultIsFiltered] = useState(false);
 
@@ -28,7 +28,7 @@ const Stock = ({ setShowModal, fetchAgain, setModalContent, handleCloseModal }) 
     }, [fetchAgain])
 
     useEffect(() => setModalContent(props => props => <ModalContentHelper {...props} />), []);
-
+    
     return (
         <S.PageWrapper>
             <AdminHeader />
@@ -55,7 +55,7 @@ const Stock = ({ setShowModal, fetchAgain, setModalContent, handleCloseModal }) 
                             )}
                         </div>
                         <div className="table-group">
-                            {merchandiseList && <MyTable data={merchandiseList} {...tableOptions} maxHeight="150px" />}
+                            {merchandiseList && <MyTable data={merchandiseList} onClick={item => { setItemSelected(item); setShowModal('decrementMerchandise'); }} {...tableOptions} maxHeight="150px" />}
                         </div>
                     </div>
                 </S.Container>

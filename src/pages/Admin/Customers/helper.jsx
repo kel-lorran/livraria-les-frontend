@@ -1,14 +1,13 @@
 import stateList from '../../../utils/data/estadosBrasileiros';
-import { inputMap } from 'pages/shared/helper';
-export * from 'pages/shared/helper';
-
-export const inputMapPersonData = inputMap[0].filter(({ name }) => !['password', 'passwordRedundancy', 'email'].includes(name));
+import { inputMap } from 'pages/shared/customers/helper';
+import { disableRequiredAttribute, alterInputAndAttributes } from 'pages/shared/helper';
+export * from 'pages/shared/customers/helper';
 
 export const inputMapToInativation = [
     [
         {   
             componentName: 'MyInput',
-            name: 'reasonInativation',
+            name: 'inativationMessage',
             label:  'motivo da inativação',
             required: true
         },
@@ -40,6 +39,19 @@ export const inputMapToShowStatus = [
         },
     ]
 ]
+
+export const inputMapToSearch = disableRequiredAttribute([
+    [
+        {
+            componentName: 'MyInput',
+            name: 'id',
+            label:  'ID',
+            type: 'number',
+            halfSize: true
+        },
+        ...alterInputAndAttributes(inputMap[0], ['password', 'passwordRedundancy'])
+    ]
+]);
 
 export const tableOptions = {
     showElements: [

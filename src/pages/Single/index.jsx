@@ -90,7 +90,7 @@ const Single = ({ match: { params }, history }) => {
                                 <li>Autor:{merchandise.book.author}</li>
                                 <li>Editota: {merchandise.book.publishing}</li>
                                 <li>Ano: {merchandise.book.year}</li>
-                                <li>ISBN: {merchandise.book.ISBN}</li>
+                                <li>ISBN: {merchandise.book.isbn}</li>
                             </ul>
                         </div>
                     </S.Container>

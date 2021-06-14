@@ -3,16 +3,18 @@ import CustomForm from '../../../components/CustomForm';
 
 import * as S from './style';
 
-import { incrementStock } from '../../../actions/merchandiseActions';
+import { incrementStock, decrementStock } from '../../../actions/merchandiseActions';
 
-import { inputMap } from './helper';
+import { inputMap, inputMapToDecrement } from './helper';
 
 export default ({ type, handleClose, itemSelected, setShowModal, setList, setActiveList, setInactiveList, setResultIsFiltered }) => {
-    const [stepCurrent, setStepCurrent] =  useState(1);
-    const [dataToSend, setDataToSend] = useState();
-
     const incrementMerchandiseSubmit = async data => {
         await incrementStock(data);
+        handleClose(true);
+    }
+
+    const decrementMerchandiseSubmit = async data => {
+        await decrementStock({ ...data, bookId: itemSelected.book.id });
         handleClose(true);
     }
 
@@ -23,9 +25,18 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setAct
                     <S.ModalHeader>
                         <h3>Entrada de produto</h3>
                     </S.ModalHeader>
-                    <CustomForm inputMap={inputMap} onSubmit={incrementMerchandiseSubmit} />
+                    <CustomForm s="min-height: 42vh;" inputMap={inputMap} onSubmit={incrementMerchandiseSubmit} />
                 </>
             )
+        case 'decrementMerchandise':
+            return (
+                <>
+                    <S.ModalHeader>
+                        <h3>Saída manual de produto</h3>
+                    </S.ModalHeader>
+                    <CustomForm s="min-height: 20vh;" inputMap={inputMapToDecrement(itemSelected.quantity)} onSubmit={decrementMerchandiseSubmit} />
+                </>
+            )    
         default:
             return null
     }

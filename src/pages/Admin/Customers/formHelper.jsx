@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import CustomForm from '../../../components/CustomForm';
+import CustomForm from 'components/CustomForm';
 
-import { saveNewCustomer, updateCustomer, searchCustomers } from '../../../actions/customerActions';
-import { updateAddress, saveNewAddress, deleteAddress } from '../../../actions/addressActions';
+import { saveNewCustomer, updateCustomer, searchCustomers, getCustomerById, updateStatusCustomer } from 'actions/customerActions';
+import { updateAddress, saveNewAddress, deleteAddress } from 'actions/addressActions';
 
 import * as S from './style';
-import { inputMap, inputMapToInativation, inputMapToAtivation, inputMapToShowStatus, inputMapPersonData } from './helper';
-import MyButton from '../../../components/MyButton';
+import { inputMap, inputMapToInativation, inputMapToAtivation, inputMapToShowStatus, inputMapPersonData, inputMapToSearch } from './helper';
+import MyButton from 'components/MyButton';
 import { Link } from 'react-router-dom';
-import SimpleTextAsButton from '../../../components/SimpleTextAsButton';
+import SimpleTextAsButton from 'components/SimpleTextAsButton';
 
 export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setActiveCustomerList, setInactiveCustomerList, setResultIsFiltered }) => {
     const [stepCurrent, setStepCurrent] =  useState(1);
@@ -36,25 +36,32 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
     }
 
     const inactiveCustomerSubmit  = async data => {
-        await updateCustomerWithoutAddressListSubmit({...data, active: 0});
+        await updateStatusCustomer({ ...data, active: 0});
+        handleClose(true);
     }
 
     const activeCustomerSubmit  = async data => {
-        await updateCustomerWithoutAddressListSubmit({...data, active: 1});
+        await updateStatusCustomer({ ...data, active: 1});
+        handleClose(true);
     }
 
-    const searchCustomerSubmit = async data => {
+    const searchCustomerSubmit = async ({ id, ...data }) => {
         try {
-            const search = status => Object.entries(data).reduce((ac, [key, value], i) => {
-                return value ? ac += `&${key}_like=${value}` : ac;
-            },`?active=${status}`);
-
-            const results = [searchCustomers(search(1)).then(r => r.data), searchCustomers(search(0)).then(r => r.data)];
-            const [resultSearchActives, resultSearchInactives] = await Promise.all(results);
-
-            setActiveCustomerList(resultSearchActives);
-            setInactiveCustomerList(resultSearchInactives);
-
+            if (!id) {
+                const search = status => Object.entries(data).reduce((ac, [key, value], i) => {
+                    return value ? ac += `&${key}=${value}` : ac;
+                },`?active=${status}`);
+    
+                const results = [searchCustomers(search(1)).then(r => r.data), searchCustomers(search(0)).then(r => r.data)];
+                const [resultSearchActives, resultSearchInactives] = await Promise.all(results);
+    
+                setActiveCustomerList(resultSearchActives);
+                setInactiveCustomerList(resultSearchInactives);
+            } else {
+                const customer = await getCustomerById(id).then(r => r.data);
+                setActiveCustomerList(customer.active === 1 ? [customer] : []);
+                setInactiveCustomerList(customer.active === 0 ? [customer] : []);
+            }
             setResultIsFiltered(true);
         } catch (error) {
             window.alert("Falha na pesquisa");
@@ -74,8 +81,6 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
         await updateAddress(data);
         handleClose(true);
     }
-
-    const disableRequiredAttribute = helper => helper.map(step => step.map(e =>  ({ ...e, required: false })));
 
     const handleRemoveAddress = async addressId => {
         await deleteAddress(addressId);
@@ -102,7 +107,7 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
                     <S.ModalHeader>
                         <h3>Pesquisar Cliente</h3>
                     </S.ModalHeader>
-                    <CustomForm inputMap={[disableRequiredAttribute(inputMap)[0]]} submmitButtonText="Pesquisar" onSubmit={searchCustomerSubmit} />
+                    <CustomForm inputMap={inputMapToSearch} submmitButtonText="Pesquisar" onSubmit={searchCustomerSubmit} />
                 </>
             )
         case 'aboutCustomer':
@@ -111,8 +116,8 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
                     <S.ModalHeader>
                         <h3>Informações</h3>
                         <MyButton onClick={() => setShowModal('updateCustomer')}>Editar</MyButton>
-                        <MyButton onClick={() => setShowModal('createAddress')}>+ Endreço</MyButton>
-                        <MyButton onClick={() => setShowModal('removeAddress')}>- Endreço</MyButton>
+                        <MyButton onClick={() => setShowModal('createAddress')}>+ Endereço</MyButton>
+                        {/* <MyButton onClick={() => setShowModal('removeAddress')}>- Endereço</MyButton> */}
                         {itemSelected.active ? (
                             <MyButton onClick={() => setShowModal('inactiveCustomer')}>Inativar</MyButton>
                         ) : (
@@ -129,7 +134,7 @@ export const FormHelper = ({ type, handleClose, itemSelected, setShowModal, setA
                     <S.ModalHeader>
                         <h3>Editar cliente - exceto endereço</h3>
                     </S.ModalHeader>
-                    <CustomForm inputMap={[inputMap[0]]} item={itemSelected} onSubmit={updateCustomerWithoutAddressListSubmit} />
+                    <CustomForm inputMap={[inputMapPersonData]} item={itemSelected} onSubmit={updateCustomerWithoutAddressListSubmit} />
                 </>
             )
         case 'inactiveCustomer':

@@ -8,5 +8,6 @@ export default () => (
         <NavLink to="/admin/clientes">Clientes</NavLink>
         <NavLink to="/admin/pedidos">Pedidos</NavLink>
         <NavLink to="/admin/estoque">Estoque</NavLink>
+        <NavLink to="/admin/cupoms">Cupons</NavLink>
     </Header>
 );

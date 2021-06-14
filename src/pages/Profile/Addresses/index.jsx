@@ -1,10 +1,10 @@
 import ProfileHeader from 'pages/Profile/shared/ProfileHeader';
-import OrdersPageMain from 'pages/shared/Orders';
-import * as S from '../shared/style';
+import AddressesPageMain from 'pages/shared/Addresses';
+import * as S from './style';
 
 export default props => (
     <S.PageWrapper>
         <ProfileHeader />
-        <OrdersPageMain {...props} />
+        <AddressesPageMain {...props} />
     </S.PageWrapper>
 );

@@ -15,9 +15,10 @@ import PrivateRoute from './PrivateRoute';
 import Dashboard from './Admin/Home';
 import Books from './Admin/Books';
 import Customers from './Admin/Customers';
-import Addresses from './Admin/Customers/address'
+import Addresses from './Admin/Address'
 import Orders from './Admin/Orders';
 import Stock from './Admin/Stock';
+import Coupons from './Admin/Coupons'
 
 //all user
 import Home from './Home';
@@ -28,7 +29,7 @@ import Cart from './Cart';
 
 //customer pages
 import Profile from './Profile';
-import ProfileAddress from './Profile/address';
+import ProfileAddress from './Profile/Addresses';
 import ProfileCard from './Profile/card';
 import ProfileOrders from './Profile/Orders';
 
@@ -99,6 +100,7 @@ export default function() {
                 <PrivateRoute path="/admin/clientes/endereco" isLogged={isLogged} component={() => <Addresses />} />
                 <PrivateRoute path="/admin/pedidos" isLogged={isLogged} component={() => <Orders />} />
                 <PrivateRoute path="/admin/estoque" isLogged={isLogged} component={() => <Stock />} />
+                <PrivateRoute path="/admin/cupoms" isLogged={isLogged} component={() => <Coupons />} />
             </Switch>
         </Router>
     )

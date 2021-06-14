@@ -30,3 +30,11 @@ export const genericPut = (data, endpoint) => {
 export const genericDelete = endpoint => {
     return axios.delete(`${apiUrl}${endpoint}`, defaultHeader());
 }
+
+export const getAllCategories = () => {
+    return genericGet('/domain-items/category');
+}
+
+export const getAllPriceGroups = () => {
+    return genericGet('/domain-items/price-group');
+}

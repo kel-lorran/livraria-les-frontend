@@ -9,7 +9,7 @@ export const getAllBooks = () => {
 }
 
 export const getBookById = id => {
-    return genericGet(`/book/${id}`);
+    return genericGet(`/product/${id}`);
 }
 
 export const getAllBooksInactives = () => {
@@ -17,9 +17,13 @@ export const getAllBooksInactives = () => {
 }
 
 export const searchBooks = search => {
-    return genericGet(`/book${search}`);
+    return genericGet(`/product/search${search}`);
+}
+
+export const updateStatusBook = ({ active, inativationMessage, id }) => {
+    return genericPut({ active, inativationMessage },`/product/status/${id}`);
 }
 
 export const updateBook = data => {
-    return genericPut(data,`/book/${data.id}`);
+    return genericPut(data,`/product/${data.id}`);
 }

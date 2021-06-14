@@ -22,9 +22,8 @@ export default ({ inputMap, submmitButtonText = 'Enviar', onSubmit, item, ...pro
     useEffect(() => setContinue(!!inputMap[step + 1]), [step])
 
     useEffect(() => {
-        inputMap.map(pass => pass
-            .forEach(({ name, getOptions}) => getOptions && getOptions().then(r => setAsyncOptions({ ...asyncOptions, [name]: r }))))
-    }, [inputMap])
+        inputMap[step].forEach(({ name, getOptions}) => getOptions && getOptions().then(r => setAsyncOptions({ ...asyncOptions, [name]: r })))
+    }, [step])
     
     const handleSubmit = e => {
         e.preventDefault();

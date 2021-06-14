@@ -2,28 +2,28 @@ import { useState, useEffect } from 'react';
 import {  useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import MyHeader from '../../components/MyHeader';
-import MyTable from '../../components/MyTable';
-import MyButton from '../../components/MyButton';
-import InputMultiple from '../../components/InputMultiple';
-import SimpleTextAsButton from '../../components/SimpleTextAsButton';
-import MyModal from '../../components/MyModal';
+import MyHeader from 'components/MyHeader';
+import MyTable from 'components/MyTable';
+import MyButton from 'components/MyButton';
+import InputMultiple from 'components/InputMultiple';
+import SimpleTextAsButton from 'components/SimpleTextAsButton';
+import MyModal from 'components/MyModal';
 import ModalContentHelper from './ModalContentHelper';
-import Loader from '../../components/Loader';
+import Loader from 'components/Loader';
 
 import { tableOptionsProducts, tableOptionsAddress, tableOptionsCard } from './helper';
 
 import * as S from './style';
 
-import { getFullProfile } from '../../actions/customerActions';
-import { getOrderById, updateDraftOrder, saveNewOrder, commitOrder } from '../../actions/orderActions';
+import { getFullProfile } from 'actions/customerActions';
+import { getDraftOrderById, updateDraftOrder, saveNewOrder, commitOrder } from 'actions/orderActions';
 
-import { setOrder, clearOrder } from '../../store/order';
+import { setOrder, clearOrder } from 'store/order';
 
-import { updateMerchandiseList } from '../../utils';
+import { updateMerchandiseList } from 'utils';
 import { TIMER_EXPIRE_CART_KEY, TIMER_EXPIRE_CART_INITIAL } from 'utils/data/constants';
 
-import { useQuantityControlFetch } from '../../hooks/useQuantityControlFetch';
+import { useQuantityControlFetch } from 'hooks/useQuantityControlFetch';
 
 const TIMER_PER_STEP = 30000;
 
@@ -52,7 +52,7 @@ const Cart = ({ history }) => {
             updateDraftOrder(newOrder).then(r => {
                 dispatch(setOrder({ ...storeOrder, merchandiseList: r.data.data.merchandiseList }));
             }).catch(e => {
-                getOrderById(storeOrder.id).then(r => dispatch(setOrder(r.data)))
+                getDraftOrderById(storeOrder.id).then(r => dispatch(setOrder(r.data)))
                 window.alert("Quantidade dessa mercadoria excedeu nosso estoque, voce pode tentar novamente com um valor menor");
             })
         }, 4000);

@@ -1,3 +1,28 @@
+import { getAllCategories, getAllPriceGroups } from 'actions/constants';
+
+const disableRequiredAttribute = helper => helper.map(step => step.map(e =>  ({ ...e, required: false })));
+
+const buildOptionsCategory = async () => {
+    const categories = await getAllCategories().then(r => r.data);
+    return categories.map(({ name: text, id }) => (
+        {
+            value: id,
+            text
+        }
+    ));
+};
+
+const buildOptionsPriceGroup = async () => {
+    const pG = await getAllPriceGroups().then(r => r.data);
+    return pG.map(({ name: text, id }) => (
+        {
+            value: id,
+            text
+        }
+    ));
+};
+
+
 export const inputMap = [
     [
         {   
@@ -17,10 +42,8 @@ export const inputMap = [
             name: 'category',
             placeholder:  'categoria',
             required: true,
-            options: [
-                { value: 'aventura', text: 'aventura'},
-                { value: 'suspense', text: 'suspense'}
-            ]
+            options: [],
+            getOptions: buildOptionsCategory
         },
         {
             componentName: 'MyInput',
@@ -36,7 +59,7 @@ export const inputMap = [
         },
         {
             componentName: 'MyInput',
-            name: 'ISBN',
+            name: 'isbn',
             label:  'ISBN',
             type: 'number',
             max: 9999999999999,
@@ -108,10 +131,8 @@ export const inputMap = [
             name: 'pricingGroup',
             placeholder:  'gpd - grupo de precificação',
             required: true,
-            options: [
-                { value: '1', text: 'padrão'},
-                { value: '2', text: 'especial'}
-            ]
+            options: [],
+            getOptions: buildOptionsPriceGroup
         },
         {
             componentName: 'MyInput',
@@ -128,7 +149,7 @@ export const inputMapToInativation = [
     [
         {   
             componentName: 'MyInput',
-            name: 'reasonInativation',
+            name: 'inativationMessage',
             label:  'motivo da inativação',
             required: true
         },
@@ -161,9 +182,23 @@ export const inputMapToShowStatus = [
     ]
 ]
 
+export const inputMapToSearch = disableRequiredAttribute([
+    [
+        {
+            componentName: 'MyInput',
+            name: 'id',
+            label:  'ID',
+            type: 'number',
+            halfSize: true
+        },
+        ...inputMap[0]
+    ],
+    inputMap[1]
+]);
+
 const abbreviateText = (len = 60) => (row, ...keys) => row[keys[0]].toString().replace(new RegExp(`(?<=.{${len}}).+`), '...');
 
-const gpdFormatter = row => `GPD ${row.pricingGroup}`;
+const gpdFormatter = row => `GPD ${row.pricingGroup.name}`;
 
 const dimensionFormatter = row => `${row.length}x${row.width}x${row.height}`;
 

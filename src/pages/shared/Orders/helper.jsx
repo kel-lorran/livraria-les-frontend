@@ -138,9 +138,15 @@ export const inputMapToSearchOrder = [
         {
             componentName: 'MyInput',
             name: 'date',
+            type: 'date',
             required: false,
-            label: 'data de criação'
+            label: 'data de criação',
+            className: 'fill'
         },
-        { ...inputMapToUpdateStatus[0][0], required: false }
+        { 
+            ...inputMapToUpdateStatus[0][0], 
+            required: false,
+            placeholder: 'status do pedido'
+        }
     ]
 ]

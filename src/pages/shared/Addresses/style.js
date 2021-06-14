@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { pageWrapperBase, containerBase } from '../../shared/style';
-export * from '../shared/style';
+import { pageWrapperBase, containerBase } from '../style';
+export * from '../style';
 
 export const PageWrapper = styled.div`
     ${pageWrapperBase}
@@ -30,4 +30,13 @@ export const Container = styled.div`
         max-width: 760px;
         margin: 0 auto;
     }
+`;
+
+export const CustomLi = styled.li`
+    text-align: center;
+    font-size: 14px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 1em 0.3em;
 `;

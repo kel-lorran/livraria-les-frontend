@@ -16,3 +16,7 @@ export const incrementStock = payload => {
 export const decrementStock = payload => {
     return genericPost(payload, '/merchandise/decrement')
 }
+
+export const searchMerchandises = search => {
+    return genericGet(`/merchandise/search${search}`)
+}

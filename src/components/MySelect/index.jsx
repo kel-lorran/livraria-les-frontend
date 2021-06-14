@@ -20,7 +20,7 @@ const MySelect = ({ value = '', name = Math.random().toString(), label, placehol
         setDisplayText(result);
     }
 
-    useEffect(getText, [value])
+    useEffect(getText, [value, children])
 
     return (
         <S.Wrapper halfSize={halfSize}>

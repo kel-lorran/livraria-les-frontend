@@ -7,7 +7,7 @@ import * as S from './style';
 
 import { tableOptionsProducts, tableOptionsAddress, tableOptionsCard, inputMapToSearchOrder, inputMapToUpdateStatus } from './helper';
 
-import { updateOrderStatus, searchOrders, updateOrderExchangeMerchandise } from '../../../actions/orderActions';
+import { updateOrderStatus, searchOrders, updateOrderExchangeMerchandise, getOrderById } from '../../../actions/orderActions';
 
 export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsFiltered, isAdminPage }) => {
     const productsListDescriptionHelper = tableOptionsProducts.showElements;
@@ -23,15 +23,20 @@ export default ({ type, handleClose, itemSelected, setShowModal, setList, setIsF
         }
     }
 
-    const searchOrderSubmit = async data => {
+    const searchOrderSubmit = async ({ id, ...data }) => {
         try {
-            const search = Object.entries(data).reduce((ac, [key, value], i) => {
-                return value ? ac += `&${key}_like=${value}` : ac;
-            },`?`);
-
-            const resultSearchList = await searchOrders(search).then(r => r.data);
-
-            setList(resultSearchList);
+            if (!id) {
+                const search = Object.entries(data).reduce((ac, [key, value], i) => {
+                    return value ? ac += `&${key}=${value}` : ac;
+                },`?searchtype=default`);
+    
+                const resultSearchList = await searchOrders(search).then(r => r.data);
+    
+                setList(resultSearchList);
+            } else {
+                const order = await getOrderById(id).then(r => r.data);
+                setList(order ? [order] : []);
+            }
 
             setIsFiltered(true);
         } catch (error) {

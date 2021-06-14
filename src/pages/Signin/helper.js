@@ -1,1 +1,1 @@
-export * from 'pages/shared/helper';
+export * from 'pages/shared/customers/helper';

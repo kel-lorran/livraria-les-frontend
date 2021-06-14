@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getOrderById } from '../actions/orderActions';
+import { getDraftOrderById } from '../actions/orderActions';
 
 import { setOrder } from '../store/order';
 

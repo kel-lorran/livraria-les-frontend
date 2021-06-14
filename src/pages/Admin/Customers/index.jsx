@@ -14,8 +14,8 @@ import { getAllCustomersActives, getAllCustomersInactives } from '../../../actio
 const Customers = () => {
     const [showModal, setShowModal] = useState(false);
     const [updateCustomerList, setUpdateCustomerList] = useState(false);
-    const [activeCustomerList, setActiveCustomerList] = useState(null);
-    const [inactiveCustomerList, setInactiveCustomerList] = useState(null);
+    const [activeCustomerList, setActiveCustomerList] = useState([]);
+    const [inactiveCustomerList, setInactiveCustomerList] = useState([]);
     const [itemSelected, setItemSelected] = useState();
     const [resultIsFiltered, setResultIsFiltered] = useState(false);
 
@@ -76,8 +76,8 @@ const Customers = () => {
                             )}
                         </div>
                         <div className="table-group">
-                            {activeCustomerList && <TableHelper data={activeCustomerList} type="activeCustomers" selectItem={item => setItemSelected(item)} />}
-                            {inactiveCustomerList && <TableHelper data={inactiveCustomerList} type="inactiveCustomers" selectItem={item => setItemSelected(item)} />}
+                            {!!activeCustomerList.length && <TableHelper data={activeCustomerList} type="activeCustomers" selectItem={item => setItemSelected(item)} />}
+                            {!!inactiveCustomerList.length && <TableHelper data={inactiveCustomerList} type="inactiveCustomers" selectItem={item => setItemSelected(item)} />}
                         </div>
                     </div>
                 </S.Container>

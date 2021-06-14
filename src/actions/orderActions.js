@@ -21,8 +21,12 @@ export const updateDraftOrder = data => {
     return genericPut(data, '/order/draft');
 }
 
-export const getOrderById = id => {
+export const getDraftOrderById = id => {
     return genericGet(`/order/draft/${id}`);
+}
+
+export const getOrderById = id => {
+    return genericGet('/order').then(r => ({ data: r.data.filter(o => o.id == id)?.[0] }));
 }
 
 export const getAllOrders = () => {

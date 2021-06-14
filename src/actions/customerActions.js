@@ -4,16 +4,20 @@ export const saveNewCustomer = async dataCustomer => {
     return genericPost(dataCustomer,'/customer');
 }
 
+export const getCustomerById = id => {
+    return genericGet(`/customer/${id}`);
+}
+
 export const getAllCustomersActives = () => {
-    return genericGet('/customer?_embed=address&active=1')
+    return genericGet('/customer/search?active=1')
 }
 
 export const getAllCustomersInactives = () => {
-    return genericGet('/customer?_embed=address&active=0')
+    return genericGet('/customer/search?active=0')
 }
 
 export const searchCustomers = search => {
-    return genericGet(`/customer${search}&_embed=address`)
+    return genericGet(`/customer${search}`)
 }
 
 export const updateCustomer = data => {
@@ -22,4 +26,8 @@ export const updateCustomer = data => {
 
 export const getFullProfile = () => {
     return genericGet(`/customer/own-profile`);
+}
+
+export const updateStatusCustomer = ({ active, inativationMessage, id }) => {
+    return genericPut({ active, inativationMessage },`/customer/status/${id}`);
 }

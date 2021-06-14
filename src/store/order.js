@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ORDER_ID } from '../utils/data/constants';
 
-import { getOrderById } from '../actions/orderActions';
+import { getDraftOrderById } from '../actions/orderActions';
 
 const orderId = JSON.parse(window.sessionStorage.getItem(ORDER_ID));
 const initialState = {
@@ -15,7 +15,7 @@ export const fetchOrder = createAsyncThunk(
     async (force, { getState }) => {
         const { order } = getState();
         if(order.id && (!order.merchandiseList.length || force)) {
-            const result = await getOrderById(order.id).then(r => r.data);
+            const result = await getDraftOrderById(order.id).then(r => r.data);
             return result;
         }
     }
