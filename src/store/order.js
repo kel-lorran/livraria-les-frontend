@@ -41,7 +41,9 @@ const orderSlice = createSlice({
     },
     extraReducers: {
         [fetchOrder.fulfilled]: (state, action) => {
-            return action.payload
+            if(action.payload)
+                return action.payload
+            clearOrder()
         },
         [fetchOrder.rejected]: (state, action) => {
             _clearOrder()

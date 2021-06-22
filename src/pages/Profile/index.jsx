@@ -32,7 +32,7 @@ const Profile = ({ setShowModal, fetchAgain, setModalContent, setItemSelected, h
 
     useEffect(async () => {
         if(storeUser.token) {
-            const _cupons = await getAllCupons().then(r => r.data);
+            const _cupons = await getAllCupons().then(r => r.data.filter(({ type }) => type !== 'promotional'));
             setCupons(_cupons)
         }
     }, [storeUser, fetchAgain])
